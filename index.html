@@ -3,8 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<!-- Privacy guarantee: this policy blocks every network request (no fetch, no images, no fonts, no trackers). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'">
+<!-- Privacy guarantee: this policy blocks every network request (no images, no fonts, no trackers, no third parties).
+     The single exception is connect-src 'self': the page may read market.json from this same site for the price ticker.
+     Nothing about you or your data is ever sent; it is a plain download of public prices. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'self'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="description" content="FinTrack: a private credit card payoff and cash-flow tracker. Your data never leaves your device.">
 <meta name="theme-color" content="#0b1220">
@@ -201,6 +203,16 @@ kbd{background:var(--sunken);border:1px solid var(--line);border-radius:4px;padd
 .stat .value{font-size:20px;font-weight:750;margin-top:2px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
 .stat .note{font-size:12px;color:var(--muted)}
 
+/* market ticker */
+.ticker{margin-bottom:14px}
+.tk-items{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.tk{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:10px 14px;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;min-width:0}
+.tk-name{font-size:12px;color:var(--muted);font-weight:600;width:100%}
+.tk-price{font-size:18px;font-weight:750;overflow-wrap:anywhere}
+.tk-price small{font-size:12px;color:var(--muted);font-weight:500;margin-left:2px}
+.tk-chg{font-size:13px;font-weight:650;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tk-foot{padding:6px 2px 0}
+
 /* compact card rows on the dashboard */
 .cardrows{display:grid;gap:4px}
 .cardrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;align-items:center;text-align:left;background:transparent;border:1px solid transparent;border-radius:10px;padding:10px;width:100%}
@@ -303,6 +315,7 @@ hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
   .field.full{grid-column:auto}
   .field input,.field select,.input,.month-controls input,.whatif input{font-size:16px}
   .cashsum b{font-size:15px}
+  .tk-items{gap:8px}.tk{padding:8px 10px}.tk-price{font-size:15px}.tk-price small{display:none}.tk-chg{font-size:12px}
   .cc-facts b{font-size:13px}
   .barrow{grid-template-columns:96px 1fr 80px}
   .txbar select.input{flex:1 1 140px}
@@ -361,6 +374,7 @@ hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
 
   <!-- DASHBOARD -->
   <section id="dashboardPage">
+    <section class="ticker hidden" id="ticker" aria-label="Market prices"></section>
     <div class="panel welcome hidden" id="welcome">
       <h2>Welcome to FinTrack 👋</h2>
       <p class="small" style="margin:6px 0 14px">Track your credit cards while you pay them off, and see money in vs. money out each month. There's no account and no server: everything you type stays in your browser.</p>
@@ -432,6 +446,7 @@ hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
     <div class="panel"><h2>Auto-save to a file</h2><div id="fsPanel" style="margin-top:10px"></div></div>
     <div class="panel"><h2>This browser</h2>
       <label class="check"><input type="checkbox" id="prefRemember"><span><b>Remember my data in this browser</b><br><span class="small">Handy on your own device. Turn this off on shared or public computers; then your data disappears when you close the tab, so Save first.</span></span></label>
+      <label class="check"><input type="checkbox" id="prefTicker"><span><b>Show market prices on the dashboard</b><br><span class="small">S&amp;P 500, gold and silver with their 7-day change. Prices come from a file on this same site; nothing about you is sent.</span></span></label>
       <label class="check"><input type="checkbox" id="prefWarn"><span><b>Warn me before closing if my data isn't safe</b><br><span class="small">Shows the browser's “Leave site?” prompt if closing would lose data, or if a backup is overdue.</span></span></label>
       <div class="formgrid" style="margin-top:10px"><div class="field"><label for="currency">Currency</label><select id="currency"></select></div><div class="field"><label for="theme">Appearance</label><select id="theme"><option value="system">Match my device</option><option value="dark">Dark</option><option value="light">Light</option></select></div></div>
       <div class="row tight" style="margin-top:12px"><button id="persistBtn" type="button">Ask browser not to auto-clear my data</button></div>
@@ -448,7 +463,7 @@ hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
       <li>These are estimates, not financial advice. Check them against your statements.</li>
     </ul></div>
   </section>
-  <div class="footer"><span>All calculations run in your browser. This page cannot make network requests.</span><span>FinTrack · open source</span></div>
+  <div class="footer"><span>All calculations run in your browser. Your data is never sent anywhere; the only download is public market prices from this site.</span><span>FinTrack · open source</span></div>
 </main>
 </div>
 <button class="fab" id="fab" type="button" aria-label="Add transaction"><svg class="i"><use href="#i-plus"/></svg></button>
@@ -653,7 +668,7 @@ function sampleData(){
 }
 
 /* ---------- browser storage ---------- */
-function loadPrefs(){try{const p=JSON.parse(localStorage.getItem(PREF_KEY)||'{}');return {remember:p.remember!==false,warnClose:p.warnClose!==false,theme:['light','dark'].includes(p.theme)?p.theme:'system'}}catch(e){return {remember:true,warnClose:true,theme:'system'}}}
+function loadPrefs(){try{const p=JSON.parse(localStorage.getItem(PREF_KEY)||'{}');return {remember:p.remember!==false,warnClose:p.warnClose!==false,ticker:p.ticker!==false,theme:['light','dark'].includes(p.theme)?p.theme:'system'}}catch(e){return {remember:true,warnClose:true,ticker:true,theme:'system'}}}
 function applyTheme(){const r=document.documentElement;if(prefs.theme==='system')r.removeAttribute('data-theme');else r.setAttribute('data-theme',prefs.theme)}
 function savePrefs(){try{localStorage.setItem(PREF_KEY,JSON.stringify(prefs))}catch(e){}}
 function loadLocal(){
@@ -768,6 +783,39 @@ async function initFile(){
   const h=await idbGet('handle');if(!h)return;
   try{if(await h.queryPermission({mode:'readwrite'})==='granted'){fileHandle=h;await syncFromFile()}else pendingHandle=h}catch(e){pendingHandle=h}
   renderStatus();renderFsPanel();
+}
+
+/* ---------- market ticker ---------- */
+// Reads public prices from market.json on this same site (kept fresh by a GitHub Action).
+// The request carries no data from the app; the CSP only allows connect-src 'self'.
+let market=null,marketAt=0;
+function cleanMarket(m){
+  if(!m||typeof m!=='object'||!Array.isArray(m.items))return null;
+  const items=m.items.slice(0,6).map(x=>{x=x&&typeof x==='object'?x:{};const chg=x.change7d==null?NaN:Number(x.change7d);return {name:str(x.name,30).trim(),unit:x.unit==='oz'?'oz':'pts',price:Number(x.price),chg,asOf:validDate(x.asOf),stale:!!x.stale}}).filter(x=>x.name&&Number.isFinite(x.price)&&x.price>0);
+  return items.length?{items,updatedAt:Date.parse(m.updatedAt)||0}:null;
+}
+async function loadMarket(){
+  if(!prefs.ticker||location.protocol==='file:'){market=null;renderTicker();return}
+  marketAt=Date.now();
+  try{
+    const r=await fetch('market.json',{cache:'no-cache',credentials:'omit',referrerPolicy:'no-referrer'});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    market=cleanMarket(await r.json());
+  }catch(e){market=null}
+  renderTicker();
+}
+const usdFmt=new Intl.NumberFormat(undefined,{style:'currency',currency:'USD'}),ptsFmt=new Intl.NumberFormat(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+function renderTicker(){
+  const el=$('ticker');
+  if(!market||!prefs.ticker){el.classList.add('hidden');el.innerHTML='';return}
+  el.classList.remove('hidden');
+  const items=market.items.map(x=>{
+    const has=Number.isFinite(x.chg),up=has&&x.chg>0,dn=has&&x.chg<0;
+    const chg=has?`<span class="tk-chg ${up?'green':dn?'red':'muted'}" title="Change over the last 7 days">(${up?'▲ +':dn?'▼ −':''}${Math.abs(x.chg).toFixed(2)}%)</span>`:'<span class="tk-chg muted">(—)</span>';
+    const price=x.unit==='oz'?esc(usdFmt.format(x.price))+'<small>/oz</small>':esc(ptsFmt.format(x.price));
+    return `<div class="tk"${x.asOf?` title="${esc(x.name)} as of ${esc(fmtDate(x.asOf))}${x.stale?' (could not refresh)':''}"`:''}><span class="tk-name">${esc(x.name)}${x.stale?' · <span class="amber">delayed</span>':''}</span><span class="tk-price num">${price}</span>${chg}</div>`;
+  }).join('');
+  el.innerHTML=`<div class="tk-items">${items}</div><div class="tk-foot tiny">Last market price · (%) is the change over the last 7 days${market.updatedAt?' · updated '+esc(ago(market.updatedAt)):''} · not real-time</div>`;
 }
 
 /* ---------- finance math ---------- */
@@ -1005,7 +1053,7 @@ function renderFsPanel(){
   $('openLinkedWrap').classList.toggle('hidden',!fsSupported);
 }
 function renderSettings(){
-  $('prefRemember').checked=prefs.remember;$('prefWarn').checked=prefs.warnClose;$('currency').value=data.settings.currency;$('theme').value=prefs.theme;renderFsPanel();
+  $('prefRemember').checked=prefs.remember;$('prefWarn').checked=prefs.warnClose;$('prefTicker').checked=prefs.ticker;$('currency').value=data.settings.currency;$('theme').value=prefs.theme;renderFsPanel();
 }
 function fillCardSelects(){
   const opts=data.cards.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('');
@@ -1195,6 +1243,9 @@ $('prefRemember').addEventListener('change',()=>{
   renderStatus();
 });
 $('prefWarn').addEventListener('change',()=>{prefs.warnClose=$('prefWarn').checked;savePrefs()});
+$('prefTicker').addEventListener('change',()=>{prefs.ticker=$('prefTicker').checked;savePrefs();loadMarket()});
+// Refresh prices when the tab comes back into view, at most every 30 minutes.
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&prefs.ticker&&Date.now()-marketAt>30*60e3)loadMarket()});
 $('persistBtn').onclick=async()=>{try{if(navigator.storage&&navigator.storage.persist){const ok=await navigator.storage.persist();toast(ok?'Done. The browser won’t clear your data automatically.':'The browser declined. Keep saving codes as your backup.')}else toast('This browser doesn’t support that option.')}catch(e){toast('Not available in this browser.')}};
 $('exportAllCsv').onclick=()=>download('fintrack-transactions-'+stamp()+'.csv',toCsv([['Date','Type','Amount','Category','Description','Card'],...data.transactions.map(t=>[t.date,t.type,t.amount,t.category,t.description,cardName(t.account)])]),'text/csv;charset=utf-8');
 $('exportCsv').onclick=()=>download('fintrack-monthly-report-'+stamp()+'.csv',toCsv([['Month','Income','Expenses','Net','Transactions'],...lastMonths(12).map(m=>{const t=totals(m);return [m,t.income,t.expenses,t.net,monthTx(m).length]})]),'text/csv;charset=utf-8');
@@ -1216,7 +1267,7 @@ window.addEventListener('beforeunload',e=>{if(prefs.warnClose&&!fileHandle&&hasC
 
 /* ---------- start ---------- */
 prefs=loadPrefs();applyTheme();data=loadLocal();
-setPage('dashboard');initFile();
+setPage('dashboard');initFile();loadMarket();
 })();
 </script>
 </body>

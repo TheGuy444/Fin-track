@@ -3,7 +3,7 @@
 A free credit card payoff and cash-flow tracker that runs entirely in your browser.
 **No account, no server, no tracking.** Your numbers never leave your device.
 
-👉 **Use it:** `https://theguy444.github.io/Fin-track/'
+👉 **Use it:** https://theguy444.github.io/Fin-track/
 
 ## What it does
 
@@ -12,6 +12,7 @@ A free credit card payoff and cash-flow tracker that runs entirely in your brows
 - **Payoff plan:** compare *avalanche* (highest APR first) and *snowball* (smallest balance first) against your current payments: debt-free date, total interest, and which card to pay first
 - **Transactions:** money in / money out by category, with search and month filters
 - **Reports:** 12-month cash flow table and charts, CSV export
+- **Market ticker:** S&P 500, gold and silver on the dashboard, with the % change over the last 7 days (can be turned off in *Save & data*)
 
 ## How your data is saved
 
@@ -26,7 +27,8 @@ Save codes are snapshots, so save again after making changes. The page warns you
 
 ## Privacy
 
-- The page includes a Content-Security-Policy that **blocks all network requests**, so it cannot send your data anywhere even if it wanted to.
+- The page includes a Content-Security-Policy that **blocks all network requests except reading `market.json` from this same site**, so it cannot send your data anywhere even if it wanted to. No third-party server is ever contacted from your browser.
+- Market prices are fetched by a GitHub Action (`.github/workflows/market.yml`) a few times each weekday and saved to `market.json`. Prices are delayed, not real-time.
 - No analytics, cookies, fonts or third-party scripts. One self-contained `index.html`.
 - Anything loaded from a save code is validated and sanitized before it's used.
 - Note: every GitHub Pages site under the same account shares one browser origin (`username.github.io`). Only host pages you trust under the same account, or turn off "Remember my data in this browser".

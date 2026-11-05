@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-04T20:50:58.314Z",
+  "updatedAt": "2026-11-05T01:30:02.470Z",
   "source": "Yahoo Finance (delayed)",
   "items": [
     {
@@ -7,8 +7,8 @@
       "name": "S&P 500",
       "symbol": "^GSPC",
       "unit": "pts",
-      "price": 7693.14,
-      "change7d": -0.66,
+      "price": 7688.62,
+      "change7d": -0.71,
       "asOf": "2026-11-04"
     },
     {
@@ -16,18 +16,18 @@
       "name": "Gold",
       "symbol": "GC=F",
       "unit": "oz",
-      "price": 4073.1,
-      "change7d": 0.53,
-      "asOf": "2026-11-04"
+      "price": 4118.4,
+      "change7d": 1.65,
+      "asOf": "2026-11-05"
     },
     {
       "id": "silver",
       "name": "Silver",
       "symbol": "SI=F",
       "unit": "oz",
-      "price": 52.35,
-      "change7d": -2.07,
-      "asOf": "2026-11-04"
+      "price": 52.71,
+      "change7d": -1.4,
+      "asOf": "2026-11-05"
     }
   ]
 }

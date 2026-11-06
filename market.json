@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-05T21:07:51.041Z",
+  "updatedAt": "2026-11-06T01:37:44.756Z",
   "source": "Yahoo Finance (delayed)",
   "items": [
     {
@@ -16,18 +16,18 @@
       "name": "Gold",
       "symbol": "GC=F",
       "unit": "oz",
-      "price": 4107.8,
-      "change7d": 1.9,
-      "asOf": "2026-11-05"
+      "price": 4077.3,
+      "change7d": 1.14,
+      "asOf": "2026-11-06"
     },
     {
       "id": "silver",
       "name": "Silver",
       "symbol": "SI=F",
       "unit": "oz",
-      "price": 52.03,
-      "change7d": -0.31,
-      "asOf": "2026-11-05"
+      "price": 51.73,
+      "change7d": -0.88,
+      "asOf": "2026-11-06"
     }
   ]
 }

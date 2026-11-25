@@ -12,6 +12,7 @@
 <meta name="theme-color" content="#0b1220">
 <meta name="color-scheme" content="dark light">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231765bb'/%3E%3Cpath d='M7 22l6-6 4 4 8-9' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="alternate" type="text/plain" href="llms.txt" title="Instructions for AI assistants: how to turn what a user says into a FinTrack import">
 <title>FinTrack · Private Finance Tracker</title>
 <style>
 /* ---------- theme tokens (dark is the default; light follows the system or the setting) ---------- */
@@ -153,6 +154,17 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
 .toast button{background:transparent;border:0;color:#7db6ff;font-weight:700;padding:6px 8px;white-space:nowrap}
 .footer{color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:6px 2px 20px}
+.footer a,.panel a{color:var(--blue)}
+.prompt{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:14px}
+.prompt q{flex:1 1 260px;font-weight:600;overflow-wrap:anywhere}
+ol.steps-list{margin:10px 0;padding-left:20px;display:grid;gap:6px}
+pre.schema{background:var(--sunken);border:1px solid var(--line);border-radius:8px;padding:10px;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;overflow:auto;white-space:pre}
+#importBody{min-width:0}
+#importBody table{white-space:normal}
+#importBody .num,#importBody .pill{white-space:nowrap}
+#importBody h3{margin:6px 0 8px}
+#importBody table{font-size:13px}
+#importBody td,#importBody th{padding:7px 8px}
 
 /* save status */
 .status{border-radius:30px;padding:7px 13px;font-size:13px;border:1px solid var(--line);background:transparent;white-space:nowrap;display:inline-flex;gap:6px;align-items:center}
@@ -229,7 +241,7 @@ kbd{background:var(--sunken);border:1px solid var(--line);border-radius:4px;padd
 /* ---------- credit card tiles ---------- */
 .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .credit-card{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--panel);scroll-margin-top:20px}
-.credit-card.flash{animation:flash 1.4s ease-out}
+.credit-card.flash,.panel.flash{animation:flash 1.4s ease-out}
 @keyframes flash{0%{box-shadow:0 0 0 3px var(--accent-line)}100%{box-shadow:0 0 0 3px transparent}}
 .cc-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .cc-head h3{font-size:16px;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -358,7 +370,7 @@ hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
   </nav>
   <div class="sidebox"><h4>THIS MONTH</h4><div class="summary-list" id="sideSummary"></div></div>
   <div class="sidebox"><h4>YOUR DATA</h4><div class="small">Nothing is sent to any server. Use <b>Save</b> now and then to get a backup code for your notepad, and <b>Load</b> to bring it back.</div><div class="small" id="deviceNote" style="margin-top:6px"></div></div>
-  <div class="tiny side-foot" style="margin-top:auto">v2.1 · <kbd>N</kbd> new transaction · <kbd>Ctrl</kbd>+<kbd>S</kbd> save</div>
+  <div class="tiny side-foot" style="margin-top:auto">v2.2 · <kbd>N</kbd> new transaction · <kbd>Ctrl</kbd>+<kbd>S</kbd> save</div>
 </aside>
 <main class="main">
   <header class="top">
@@ -383,7 +395,7 @@ hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
         <div class="step"><b>2 · Log payments as you go</b><p class="small">Watch the balance drop and your debt-free date move closer.</p></div>
         <div class="step"><b>3 · Back up now and then</b><p class="small">Click <b>Save</b> for a backup code you keep. Load it on any device.</p></div>
       </div>
-      <div class="row tight"><button class="primary" id="wAddCard" type="button">＋ Add my first card</button><button id="wLoad" type="button">Load my save code</button><button class="ghost" id="wSample" type="button">Try it with sample data</button></div>
+      <div class="row tight"><button class="primary" id="wAddCard" type="button">＋ Add my first card</button><button id="wAi" type="button">🎙 Tell an AI assistant instead</button><button id="wLoad" type="button">Load my save code</button><button class="ghost" id="wSample" type="button">Try it with sample data</button></div>
     </div>
     <section class="panel hero" id="hero"></section>
     <div class="grid two">
@@ -443,6 +455,28 @@ hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
       </div>
       <div class="row tight" style="margin-top:14px"><button class="save" id="sSave" type="button">Save code…</button><button id="sLoad" type="button">Load…</button><button id="exportJson" type="button">Download backup (.json)</button></div>
     </div>
+    <div class="panel" id="aiPanel"><h2>Set it up by talking to an AI assistant</h2>
+      <p class="small">Rather not type it all in? Open an AI assistant that can read web pages (text or voice chat) and say:</p>
+      <div class="callout prompt"><q id="aiPrompt">Read https://theguy444.github.io/Fin-track/llms.txt and help me put my finances into FinTrack.</q><button id="aiCopy" type="button">Copy</button></div>
+      <ol class="small steps-list">
+        <li>Tell it about your cards, income and bills in your own words. Messy is fine; it will ask about anything important that's missing.</li>
+        <li>It gives you an import: a block of text starting with <code>{"fintrack": "import"</code>, or sometimes a link. Copy the text and paste it into <b>Load</b>, or tap the link.</li>
+        <li>FinTrack shows you a preview. Check the numbers, tap <b>Import</b>, then <b>Save</b> to keep a backup code.</li>
+      </ol>
+      <div class="row tight"><button class="primary" id="aiPaste" type="button">Paste an import…</button></div>
+      <div class="callout warning" style="margin-top:12px">What you say to an AI assistant goes to the company that runs it, under their privacy policy. FinTrack itself still sends nothing. Never give an assistant card numbers, account numbers or passwords; FinTrack doesn't need them.</div>
+      <details class="more"><summary>For AI assistants: the import format</summary>
+        <p class="small">Full instructions: <a href="llms.txt">llms.txt</a>. Give the user one JSON object in a code block (don't read it aloud in voice chat). Numbers are plain numbers; APR is a percent; dates are YYYY-MM-DD; a card <i>name</i> that matches an existing card updates it. Never include card or account numbers.</p>
+<pre class="schema">{
+  "fintrack": "import", "version": 1, "currency": "USD",
+  "cards": [{ "name": "Chase Visa", "balance": 3400, "apr": 24.99,
+              "payment": 200, "limit": 8000, "min": 95, "notes": "" }],
+  "transactions": [{ "date": "2026-11-01", "type": "income", "amount": 4200,
+                     "category": "Salary", "description": "Paycheck", "card": "" }]
+}</pre>
+        <p class="small">Optional one-tap link (only if you can run code to build it): this page's address + <code>#import=</code> + <code>encodeURIComponent(JSON.stringify(obj))</code>. The part after <code>#</code> never reaches any server.</p>
+      </details>
+    </div>
     <div class="panel"><h2>Auto-save to a file</h2><div id="fsPanel" style="margin-top:10px"></div></div>
     <div class="panel"><h2>This browser</h2>
       <label class="check"><input type="checkbox" id="prefRemember"><span><b>Remember my data in this browser</b><br><span class="small">Handy on your own device. Turn this off on shared or public computers; then your data disappears when you close the tab, so Save first.</span></span></label>
@@ -463,7 +497,7 @@ hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
       <li>These are estimates, not financial advice. Check them against your statements.</li>
     </ul></div>
   </section>
-  <div class="footer"><span>All calculations run in your browser. Your data is never sent anywhere; the only download is public market prices from this site.</span><span>FinTrack · open source</span></div>
+  <div class="footer"><span>All calculations run in your browser. Your data is never sent anywhere; the only download is public market prices from this site.</span><span>AI assistants: see <a href="llms.txt">llms.txt</a> · FinTrack · open source</span></div>
 </main>
 </div>
 <button class="fab" id="fab" type="button" aria-label="Add transaction"><svg class="i"><use href="#i-plus"/></svg></button>
@@ -533,13 +567,21 @@ hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
 <!-- LOAD DIALOG -->
 <dialog id="loadDlg" aria-labelledby="loadTitle"><div class="dlg">
   <div class="dlg-head"><h2 id="loadTitle">Load your data</h2><button class="ghost x" data-close type="button" aria-label="Close">✕</button></div>
-  <p class="small">Paste everything from your save note (extra text around the code is fine), or open the .txt / .json file.</p>
-  <textarea id="loadText" rows="7" placeholder="Paste your save code here…" aria-label="Save code to load"></textarea>
+  <p class="small">Paste everything from your save note, or an import from an AI assistant (extra text around it is fine), or open the .txt / .json file.</p>
+  <textarea id="loadText" rows="7" placeholder="Paste your save code or AI import here…" aria-label="Save code or import to load"></textarea>
   <div class="field hidden" id="loadPassWrap"><label for="loadPass">🔒 This code is locked. Passphrase</label><input id="loadPass" type="password" autocomplete="current-password"></div>
   <div id="loadErr" class="small red" role="alert"></div>
   <div class="row"><button id="doLoad" class="primary" type="button">Load data</button><button id="loadFileBtn" type="button">Open a file…</button><input type="file" id="loadFile" accept=".txt,.json,text/plain,application/json" class="hidden"></div>
   <div class="row" id="openLinkedWrap"><button id="dlgOpenLinked" type="button">Open an auto-save file (Chrome/Edge)…</button></div>
   <div class="callout warning">Loading replaces what's currently shown on this device. If you have unsaved changes, save them first.</div>
+</div></dialog>
+
+<!-- IMPORT REVIEW DIALOG (data prepared by an AI assistant) -->
+<dialog id="importDlg" aria-labelledby="importTitle"><div class="dlg">
+  <div class="dlg-head"><h2 id="importTitle">Check your import</h2><button class="ghost x" data-close type="button" aria-label="Close">✕</button></div>
+  <p class="small">This was prepared from what you told an AI assistant. Nothing has changed yet: check the numbers, then import.</p>
+  <div id="importBody"></div>
+  <div class="dlg-foot"><button class="primary" id="importMerge" type="button">Import</button><button id="importReplace" class="danger hidden" type="button">Replace everything</button><span class="spacer"></span><button type="button" class="ghost" data-close>Cancel</button></div>
 </div></dialog>
 
 <!-- LOG PAYMENT / CHARGE DIALOG -->
@@ -589,7 +631,7 @@ const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const validDate=s=>typeof s==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(s)&&!isNaN(new Date(s+'T12:00:00'))?s:null;
 const fmtCache={};
-function money(n){const cur=(data&&data.settings.currency)||'USD';if(!fmtCache[cur]){try{fmtCache[cur]=new Intl.NumberFormat(undefined,{style:'currency',currency:cur})}catch(e){fmtCache[cur]=new Intl.NumberFormat(undefined,{style:'currency',currency:'USD'})}}return fmtCache[cur].format(Number.isFinite(+n)?+n:0)}
+function money(n,curOverride){const cur=curOverride||(data&&data.settings.currency)||'USD';if(!fmtCache[cur]){try{fmtCache[cur]=new Intl.NumberFormat(undefined,{style:'currency',currency:cur})}catch(e){fmtCache[cur]=new Intl.NumberFormat(undefined,{style:'currency',currency:'USD'})}}return fmtCache[cur].format(Number.isFinite(+n)?+n:0)}
 // Toast with an optional Undo action (used instead of "Are you sure?" for deletes).
 let undoFn=null;
 function toast(msg,undo){
@@ -712,7 +754,8 @@ async function readSaveText(text,pass){
   text=String(text||'').trim();
   if(!text)throw new Error('Paste your save code first.');
   if(text[0]==='{'){let o;try{o=JSON.parse(text)}catch(e){throw new Error('That JSON file is damaged or incomplete.')}return sanitize(o,true)}
-  const c=findCode(text);if(!c)throw new Error('No FinTrack save code found. It should contain text starting with FT2.');
+  const c=findCode(text);
+  if(!c){const o=findJson(text);if(o)return sanitize(o,true);throw new Error('No FinTrack save code found. It should contain text starting with FT2. (or an AI import starting with {"fintrack": "import").')}
   let bytes;try{bytes=b64u.dec(c.body)}catch(e){throw new Error('The save code looks damaged. Make sure you copied all of it.')}
   if(c.flags.includes('e')){
     if(!canCrypto)throw new Error('This browser can’t decrypt locked codes. Open the page over https (your GitHub Pages link).');
@@ -731,6 +774,140 @@ async function readSaveText(text,pass){
 function codeNote(code,locked){
   const when=new Date().toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'});
   return `FinTrack save, ${when}\n${data.cards.length} card(s), ${data.transactions.length} transaction(s)${locked?', locked with a passphrase':''}\nTo restore: open your FinTrack page, click Load, paste this whole note.\n\n${code}\n\n=== END ===`;
+}
+
+/* ---------- import from an AI assistant ---------- */
+// Someone tells an AI assistant (text or voice) about their finances; the assistant reads llms.txt and
+// produces a small "FinTrack import" JSON. It reaches this page by paste (Load) or by a #import= link.
+// The part after # is never sent to any server: it's read here, then removed from the address bar.
+// Everything goes through readImport() (cleaned) and a review dialog before anything changes.
+
+// First parseable {...} object in a piece of text: tolerates ``` fences and chatty text around it.
+function findJson(text){
+  const t=String(text||'').slice(0,5e6);let start=t.indexOf('{'),tries=0;
+  while(start>=0&&tries++<50){
+    let depth=0,inStr=false,bs=false;
+    for(let i=start;i<t.length;i++){
+      const ch=t[i];
+      if(inStr){if(bs)bs=false;else if(ch==='\\')bs=true;else if(ch==='"')inStr=false;continue}
+      if(ch==='"')inStr=true;else if(ch==='{')depth++;
+      else if(ch==='}'&&--depth===0){try{const o=JSON.parse(t.slice(start,i+1));if(o&&typeof o==='object'&&!Array.isArray(o))return o}catch(e){}break}
+    }
+    start=t.indexOf('{',start+1);
+  }
+  return null;
+}
+// A full FinTrack backup has app:'FinTrack' or cards with ids; anything else with cards/transactions is an import.
+function isImportObj(o){
+  if(!o||typeof o!=='object')return false;
+  if(o.fintrack==='import')return true;
+  const hasC=Array.isArray(o.cards),hasT=Array.isArray(o.transactions);
+  if(!hasC&&!hasT)return false;
+  if(o.app==='FinTrack')return false;
+  return !(hasC&&hasT&&o.cards.every(c=>c&&c.id!=null&&c.id!==''));
+}
+// "$3,400" -> 3400, "24.99%" -> 24.99. Returns NaN when there's no number.
+const toNum=v=>{if(typeof v==='number')return v;const m=String(v??'').replace(/[,\s]/g,'').match(/-?\d+(\.\d+)?/);return m?Number(m[0]):NaN};
+const money2=n=>Math.round(n*100)/100;
+function readImport(o){
+  const out={currency:null,cards:[],transactions:[]};
+  const cur=String(o.currency||'').trim().toUpperCase();if(CURRENCIES.includes(cur))out.currency=cur;
+  const opt=v=>{v=toNum(v);return Number.isFinite(v)&&v>0?money2(v):null};
+  (Array.isArray(o.cards)?o.cards:[]).slice(0,200).forEach(c=>{
+    if(!c||typeof c!=='object')return;
+    const name=str(c.name,60).trim(),bal=toNum(c.balance);
+    if(!name&&!Number.isFinite(bal))return;
+    const apr=opt(c.apr);
+    out.cards.push({name:name||'Card',balance:Number.isFinite(bal)?money2(Math.abs(bal)):0,apr:apr==null?null:clamp(apr,0,100),payment:opt(c.payment??c.monthlyPayment),limit:opt(c.limit??c.creditLimit),min:opt(c.min??c.minimum??c.minimumPayment),notes:str(c.notes,300).trim()});
+  });
+  (Array.isArray(o.transactions)?o.transactions:[]).slice(0,5000).forEach(t=>{
+    if(!t||typeof t!=='object')return;
+    const raw=toNum(t.amount);if(!Number.isFinite(raw)||!raw)return;
+    const ty=String(t.type||'').trim().toLowerCase();
+    const type=raw<0?'expense':/^(income|in|money in|deposit|credit)$/.test(ty)?'income':'expense';
+    let date=validDate(String(t.date||'').trim()),guessed=false;
+    if(!date){const ym=String(t.date||'').trim().match(/^(\d{4})-(\d{2})$/);date=ym?validDate(ym[0]+'-01'):null}
+    if(!date){date=dateNow();guessed=true}
+    out.transactions.push({date,type,amount:money2(Math.abs(raw)),category:str(t.category,40).trim()||(type==='income'?'Income':'Other'),description:str(t.description,120).trim(),card:str(t.card??t.account,60).trim(),guessed});
+  });
+  return out;
+}
+const nameKey=s=>String(s||'').trim().toLowerCase();
+let pendingImport=null;
+function openImport(imp){
+  if(!imp.cards.length&&!imp.transactions.length){toast('That import has no cards or transactions in it.');return}
+  pendingImport=imp;
+  const cur=imp.currency||data.settings.currency,m=n=>esc(money(n,cur));
+  const known=new Set([...data.cards,...imp.cards].map(c=>nameKey(c.name)));
+  const exists=n=>data.cards.some(x=>nameKey(x.name)===nameKey(n));
+  const warn=[];let h='';
+  if(imp.cards.length){
+    h+=`<h3>${imp.cards.length} credit card${imp.cards.length===1?'':'s'}</h3><div class="table-wrap"><table><thead><tr><th>Card</th><th>Balance</th><th>APR</th><th>Pays / month</th><th></th></tr></thead><tbody>`+
+      imp.cards.map(c=>`<tr><td>${esc(c.name)}</td><td class="num">${m(c.balance)}</td><td>${c.apr==null?(exists(c.name)?'<span class="muted">unchanged</span>':'<span class="amber">not given</span>'):esc(c.apr+'%')}</td><td class="num">${c.payment!=null?m(c.payment):exists(c.name)?'<span class="muted">unchanged</span>':'<span class="muted">estimated</span>'}</td><td>${exists(c.name)?'<span class="pill">updates yours</span>':'<span class="pill">new</span>'}</td></tr>`).join('')+'</tbody></table></div>';
+    const noApr=imp.cards.filter(c=>c.apr==null&&!exists(c.name)).map(c=>c.name);
+    if(noApr.length)warn.push(`No APR for ${esc(noApr.join(', '))}. It's set to 0% until you edit the card, so its payoff date will look better than it really is.`);
+  }
+  if(imp.transactions.length){
+    const tx=imp.transactions,inc=sum(tx.filter(t=>t.type==='income').map(t=>t.amount)),out=sum(tx.filter(t=>t.type==='expense').map(t=>t.amount));
+    const rows=[...tx].sort((a,b)=>a.date.localeCompare(b.date)).slice(0,12);
+    h+=`<h3 style="margin-top:12px">${tx.length} transaction${tx.length===1?'':'s'}</h3><div class="small" style="margin-bottom:6px">Money in <b class="green num">${m(inc)}</b> · Money out <b class="red num">${m(out)}</b></div><div class="table-wrap"><table><thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th></tr></thead><tbody>`+
+      rows.map(t=>`<tr><td>${esc(fmtDate(t.date))}</td><td>${esc(t.category)}</td><td>${esc(t.description)}${t.card?` <span class="muted">· ${esc(t.card)}</span>`:''}</td><td class="num ${t.type==='income'?'green':''}">${t.type==='income'?'+':'−'}${m(t.amount)}</td></tr>`).join('')+
+      (tx.length>rows.length?`<tr><td colspan="4" class="muted">…and ${tx.length-rows.length} more</td></tr>`:'')+'</tbody></table></div>';
+    const g=tx.filter(t=>t.guessed).length;if(g)warn.push(`${g} transaction${g===1?' had':'s had'} no date, so ${g===1?'it is':'they are'} dated today.`);
+    const lost=[...new Set(tx.filter(t=>t.card&&!known.has(nameKey(t.card))).map(t=>t.card))];
+    if(lost.length)warn.push(`No card called ${esc(lost.join(', '))}, so ${lost.length===1?'its':'their'} transactions are kept without a card.`);
+  }
+  if(imp.currency&&imp.currency!==data.settings.currency&&hasContent())warn.push(`Your currency will change from ${esc(data.settings.currency)} to ${esc(imp.currency)}.`);
+  if(warn.length)h+=`<div class="callout warning" style="margin-top:12px">${warn.map(w=>'<div>'+w+'</div>').join('')}</div>`;
+  $('importBody').innerHTML=h;
+  const has=hasContent();
+  $('importMerge').textContent=has?'Add to my data':'Import';
+  $('importReplace').classList.toggle('hidden',!has);
+  closeDialogs();showDlg('importDlg');
+}
+// mode 'merge': cards with a matching name are updated, exact duplicate transactions skipped. 'replace': start fresh.
+function applyImport(mode){
+  const imp=pendingImport;if(!imp)return;pendingImport=null;
+  const d=mode==='replace'?emptyData():JSON.parse(JSON.stringify(data));
+  if(mode==='replace'){d.settings.currency=data.settings.currency;d.meta=JSON.parse(JSON.stringify(data.meta))}
+  if(imp.currency)d.settings.currency=imp.currency;
+  let added=0,updated=0,txAdded=0,txSkipped=0;
+  imp.cards.forEach(c=>{
+    const ex=d.cards.find(x=>nameKey(x.name)===nameKey(c.name));
+    if(ex){
+      ex.balance=c.balance;if(c.balance>num(ex.startBalance))ex.startBalance=c.balance;
+      ['apr','payment','limit','min'].forEach(f=>{if(c[f]!=null)ex[f]=c[f]});if(c.notes)ex.notes=c.notes;updated++;
+    }else{
+      const apr=c.apr??0,min=c.min??estMin(c.balance,apr);
+      d.cards.push({id:uid(),name:c.name,balance:c.balance,startBalance:c.balance,limit:c.limit??0,apr,min,payment:c.payment??min,target:24,step:25,notes:c.notes});added++;
+    }
+  });
+  const sig=t=>[t.date,t.type,t.amount,nameKey(t.category),nameKey(t.description)].join('|');
+  const seen=new Set(d.transactions.map(sig));
+  imp.transactions.forEach(t=>{
+    const card=t.card?d.cards.find(x=>nameKey(x.name)===nameKey(t.card)):null;
+    const tx={id:uid(),date:t.date,type:t.type,amount:t.amount,category:t.category,description:t.description,account:card?card.id:''};
+    const s=sig(tx);if(seen.has(s)){txSkipped++;return}seen.add(s);d.transactions.push(tx);txAdded++;
+  });
+  const parts=[];
+  if(added)parts.push(added+' card'+(added===1?'':'s')+' added');
+  if(updated)parts.push(updated+' card'+(updated===1?'':'s')+' updated');
+  if(txAdded)parts.push(txAdded+' transaction'+(txAdded===1?'':'s'));
+  if(txSkipped)parts.push(txSkipped+' duplicate'+(txSkipped===1?'':'s')+' skipped');
+  closeDialogs();
+  withUndo('Imported: '+(parts.join(', ')||'nothing new')+'. Tap Save to keep a backup.',()=>{data=d});
+  setPage(imp.cards.length||!imp.transactions.length?'dashboard':'transactions');
+}
+// #import=<percent-encoded JSON>, or base64url JSON. Decodes each %XX run on its own so a stray "%" can't break it.
+function importFromHash(){
+  const h=location.hash;if(!/^#import=/i.test(h))return;
+  try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}
+  const raw=h.slice(8);
+  let text=raw.replace(/(%[0-9A-Fa-f]{2})+/g,s=>{try{return decodeURIComponent(s)}catch(e){return s}});
+  if(!text.trim().startsWith('{')){try{text=new TextDecoder().decode(b64u.dec(text.trim()))}catch(e){}}
+  const o=findJson(text);
+  if(!o||!isImportObj(o)){toast('That import link is incomplete. Ask the assistant for the import text and paste it into Load instead.');return}
+  openImport(readImport(o));
 }
 
 /* ---------- auto-save file (File System Access API: Chrome / Edge desktop) ---------- */
@@ -1151,6 +1328,7 @@ async function downloadTxt(){const note=await codeReady;if(!note)return;download
 function openLoad(){$('loadText').value='';$('loadPass').value='';$('loadErr').textContent='';$('loadPassWrap').classList.add('hidden');showDlg('loadDlg');setTimeout(()=>$('loadText').focus(),50)}
 async function doLoad(){
   $('loadErr').textContent='';const text=$('loadText').value;
+  if(!findCode(text)){const o=findJson(text);if(isImportObj(o)){const imp=readImport(o);if(imp.cards.length||imp.transactions.length){openImport(imp);return}$('loadErr').textContent='That import has no cards or transactions in it.';return}}
   try{
     const d=await readSaveText(text,$('loadPass').value);
     if(hasContent()&&isDirty()&&!confirm('You have changes that aren’t saved. Loading will replace them. Continue?'))return;
@@ -1227,6 +1405,19 @@ $('dlJson').onclick=exportJson;$('exportJson').onclick=exportJson;
 $('dlgLinkFile').onclick=()=>{closeDialogs();linkNewFile()};
 $('dlgOpenLinked').onclick=openLinkedFile;
 $('doLoad').onclick=doLoad;
+$('importMerge').onclick=()=>applyImport('merge');
+$('importReplace').onclick=()=>{if(confirm('Replace all your current cards and transactions with this import? (You can undo right after.)'))applyImport('replace')};
+$('aiPaste').onclick=openLoad;
+$('wAi').onclick=()=>{setPage('settings');const p=$('aiPanel');p.scrollIntoView({block:'start'});p.classList.add('flash');setTimeout(()=>p.classList.remove('flash'),1500)};
+$('aiCopy').onclick=async()=>{
+  const t=$('aiPrompt').textContent;let ok=false;
+  try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(t);ok=true}}catch(e){}
+  if(!ok){const r=document.createRange();r.selectNodeContents($('aiPrompt'));const s=getSelection();s.removeAllRanges();s.addRange(r);try{ok=document.execCommand('copy')}catch(e){}}
+  toast(ok?'Copied. Paste it into your AI assistant, or just say it in voice chat.':'Select the sentence and copy it.');
+};
+// Point the prompt at wherever this copy of FinTrack is hosted (forks included).
+if(location.protocol!=='file:'){try{$('aiPrompt').textContent='Read '+new URL('llms.txt',location.href.split('#')[0]).href+' and help me put my finances into FinTrack.'}catch(e){}}
+window.addEventListener('hashchange',importFromHash);
 $('loadText').addEventListener('input',()=>{$('loadErr').textContent='';$('loadPassWrap').classList.toggle('hidden',!codeIsLocked($('loadText').value))});
 $('loadPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLoad()});
 $('loadFileBtn').onclick=()=>$('loadFile').click();
@@ -1267,7 +1458,7 @@ window.addEventListener('beforeunload',e=>{if(prefs.warnClose&&!fileHandle&&hasC
 
 /* ---------- start ---------- */
 prefs=loadPrefs();applyTheme();data=loadLocal();
-setPage('dashboard');initFile();loadMarket();
+setPage('dashboard');initFile();loadMarket();importFromHash();
 })();
 </script>
 </body>

@@ -14,6 +14,19 @@ A free credit card payoff and cash-flow tracker that runs entirely in your brows
 - **Reports:** 12-month cash flow table and charts, CSV export
 - **Market ticker:** S&P 500, gold and silver on the dashboard, with the % change over the last 7 days (can be turned off in *Save & data*)
 
+## Set it up by talking to an AI assistant
+
+Don't want to type everything in? Open any AI assistant that can read web pages (text or voice chat) and say:
+
+> Read https://theguy444.github.io/Fin-track/llms.txt and help me put my finances into FinTrack.
+
+Then just talk: "I owe like eleven hundred on the Discover, it's 26 percent, I pay a hundred a month, rent's fourteen hundred…". The assistant sorts it out, asks about anything important that's missing, and gives you a **FinTrack import** (a short block of text, or a link if it can build one). Paste it into **Load** or tap the link, check the preview, tap **Import**, then **Save** to keep a backup code.
+
+- [`llms.txt`](llms.txt) tells assistants the import format and how to behave (short questions, don't read code aloud in voice chat, never collect card or account numbers).
+- Imports always show a review screen first. Cards whose name matches one you already have are updated; identical transactions are skipped; one tap undoes the import.
+- Import links put the data after `#`, which browsers never send to the website. The page reads it locally and removes it from the address bar.
+- **Privacy note:** what you say to an AI assistant goes to the company that runs it, under their privacy policy. FinTrack itself still sends nothing.
+
 ## How your data is saved
 
 There's no server, so you keep your own data. Three options:
@@ -30,7 +43,7 @@ Save codes are snapshots, so save again after making changes. The page warns you
 - The page includes a Content-Security-Policy that **blocks all network requests except reading `market.json` from this same site**, so it cannot send your data anywhere even if it wanted to. No third-party server is ever contacted from your browser.
 - Market prices are fetched by a GitHub Action (`.github/workflows/market.yml`) a few times each weekday and saved to `market.json`. Prices are delayed, not real-time.
 - No analytics, cookies, fonts or third-party scripts. One self-contained `index.html`.
-- Anything loaded from a save code is validated and sanitized before it's used.
+- Anything loaded from a save code or an AI import is validated and sanitized before it's used.
 - Note: every GitHub Pages site under the same account shares one browser origin (`username.github.io`). Only host pages you trust under the same account, or turn off "Remember my data in this browser".
 
 

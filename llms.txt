@@ -1,31 +1,69 @@
 # FinTrack: instructions for AI assistants
 
-> FinTrack (https://theguy444.github.io/Fin-track/) is a free, private credit card payoff and cash-flow tracker. It runs entirely in the user's browser: no account, no server. You cannot send data to it. Instead, you turn what the user tells you into a short **FinTrack import** that they paste into the page (or open as a link). The page shows them a review screen before anything is added.
+> FinTrack (https://theguy444.github.io/Fin-track/) is a free, private tracker for credit card payoff, bills, due dates and cash flow. It runs entirely in the user's browser: no account, no server, no login. You can't send data to it and you never fetch the user's data from anywhere. The user supplies the numbers; you keep them organised in a **FinTrack file** (`fintrack.json`) that the user owns. They load that file in FinTrack to see their dashboard, and give it back to you whenever something changes.
 
-If a user has pointed you at this page, they want help getting their finances into FinTrack. They may be talking to you by voice, and what they say may be rambling, out of order, approximate or self-correcting ("uh, the Visa is like 3 grand, no wait, 3,400"). That's expected. Your job is to sort it out.
+The user may be talking to you by voice, and what they say may be rambling, out of order, approximate or self-correcting ("uh, the Visa is like 3 grand, no wait, 3,400"). That's expected. Your job is to sort it out.
 
-## What to do
+## Which situation are you in?
 
-1. **Listen and extract.** Pull out:
-   - **Credit cards** (or other revolving debts): a short nickname, current balance, APR, what they pay each month, and if mentioned the credit limit and minimum payment.
-   - **Money in and money out**: income (paychecks, side jobs) and spending or bills (rent, groceries, utilities, subscriptions…), with amounts and roughly when.
-2. **Ask only what matters, briefly.** For each card, balance and APR matter most, then the monthly payment. If the user doesn't know the APR, say a typical card is around 20–30% and they can fix it later in the app. Leave it out rather than guessing; the review screen will flag it. Don't interrogate them about every coffee. One or two short follow-up questions at a time, especially in voice.
-3. **Read back a short summary** in plain words ("Three cards, about $5,200 total; $4,200 a month coming in; rent, groceries and utilities going out. Sound right?") and fix anything they correct.
-4. **Give them the import** (format below).
-   - **Always** put the import JSON in a fenced code block in the chat text.
-   - **In voice chat, never read the JSON or a link aloud.** Say something like: "I've put your FinTrack import in the chat. Open FinTrack, tap Load, paste it, then check the preview and tap Import."
-   - **Optionally, a one-tap link**, but only if you can run code to build it: the FinTrack page address followed by `#import=` and `encodeURIComponent(JSON.stringify(importObject))`. Do not try to percent-encode by hand; a single wrong character breaks it. If you can't run code, the code block alone is perfect.
-5. **Remind them to keep it.** After importing, tapping **Save** in FinTrack gives them a backup code (optionally passphrase-encrypted) to keep in a notes file. Everything is also remembered in that browser automatically.
+1. **The user gave you a FinTrack file** (JSON with `"fintrack": "profile"`, attached or pasted). → *Managing a FinTrack file* below. The file's own `_agent.rules` say the same thing in short form.
+2. **The user has no file yet** and wants to set FinTrack up. → Talk it through, then make a new FinTrack file (template at the end). Give them the whole file.
+3. **The user wants a quick one-off addition** and doesn't have their file with them, or the file is huge and they're on a phone. → *Quick import* below.
 
-## Privacy rules
+If you can run code and have the FinTrack skill (`skill/fintrack` in the repository: https://github.com/TheGuy444/Fin-track), use its `scripts/fintrack.py`: `commit` validates the file and bumps the revision, `diff` proves you changed only what was asked, `due` and `summary` answer questions exactly. Without it, follow the rules below carefully by hand.
 
-- Never ask for, and never include, card numbers, account numbers, CVV codes, PINs, passwords, Social Security / national ID numbers or online banking logins. If the user says one anyway, leave it out and use a nickname like "Chase Visa" or "Store card".
+## Managing a FinTrack file
+
+### Answering questions
+Read the file and answer in plain words: what's due this week, what's overdue, how much is left over each month, which card to pay first, when they'll be debt-free. Due dates come from the scheduling rules below. Say these are estimates (interest approximated as APR ÷ 12, no new charges).
+
+### Making changes
+1. **Change only what they asked.** Keep every other entry, id and field exactly as it was, including fields you don't recognise. Don't reorder, rename or "tidy".
+2. **On every edit:** `revision` + 1 (from the file they gave you); `updatedAt` = current date-time in ISO 8601; `updatedBy` = `"assistant"`; append to `log`: `{"rev": <new revision>, "at": <same time>, "by": "assistant", "summary": "<one short line, e.g. Added Trash pickup: $35/mo, due the 15th>"}`.
+3. **Give back the complete file** in one ```json code block (or as a downloadable file if you can make one), after a one-sentence summary of what changed. Tell them: save it over the old file, then drop it on the FinTrack page or tap Load. FinTrack shows them what changed before anything is replaced.
+4. **In voice chat, never read JSON aloud.** Say something like: "Done. Your updated FinTrack file is in the chat; save it and drop it into FinTrack."
+5. If they share a file with a **lower revision** than one you produced earlier in this chat, ask which is current before editing.
+
+### What goes where
+
+| They say | Edit |
+|---|---|
+| "Chase card, owe 3,400, it's 24.99%, I pay 200, due the 18th" | `cards`: `{"id":"chase","name":"Chase","balance":3400,"apr":24.99,"payment":200,"dueDay":18}` |
+| "Trash bill is $35 a month, due the 15th" | `bills`: `{"id":"trash","name":"Trash pickup","amount":35,"category":"Utilities","frequency":"monthly","dueDay":15}` |
+| "Car insurance, 390 every 3 months, next one December 10th" | `bills`: `"frequency":"quarterly","nextDue":"2026-12-10"` |
+| "Electric's usually around 120, due the 22nd" | `bills`: `"amount":120,"dueDay":22,"variable":true` |
+| "Phone's on autopay on my Chase" | that bill: `"autopay":true,"card":"chase"` |
+| "I get paid 2,100 every other Friday, next one the 27th" | `income`: `{"id":"paycheck","name":"Paycheck","amount":2100,"frequency":"biweekly","nextDue":"2026-11-27"}` |
+| "Paid the trash bill" (today) | that bill: `"lastPaid":"<today>"`; `transactions` += `{"id":"…","date":"<today>","type":"expense","amount":35,"category":"Utilities","description":"Trash pickup","bill":"trash"}` unless they say not to |
+| "Paid 200 on the Chase" | Chase `balance` − 200; `history` += `{"id":"…","card":"chase","date":"<today>","kind":"payment","amount":200}`. No transaction unless they ask. |
+| "Put 80 at Target on the Discover" | Discover `balance` + 80; `history` += `{"kind":"charge",…}`; add an expense transaction with `"card":"discover"` if they track spending |
+| "Chase raised my rate to 27.24" | only that card's `apr` |
+| "I cancelled Netflix" | remove that bill |
+
+### Field rules
+- **Numbers are plain numbers**: `3400`, not `"$3,400"` or `"3.4k"`. `apr` is a percent: `24.99` means 24.99%.
+- **Dates** are `YYYY-MM-DD`. Use the real current date, not one from an example.
+- **ids**: short, unique across the whole file, made from the name: `"trash"`, `"chase-visa"`, `"car-insurance"`. Letters, digits, `-` and `_` only. Link to cards by **id** (`card`, `history[].card`, `transactions[].card`) and to bills by id (`transactions[].bill`).
+- **frequency**: `weekly`, `biweekly`, `monthly`, `quarterly`, `yearly` or `once`. `monthly` needs `dueDay` (1–31; short months use their last day). All others need `nextDue`: any real due date, and it repeats from there.
+- **Don't guess.** For a card, balance and APR matter most, then the payment and due day. For a bill, amount and due date. Ask one or two short questions at a time; if they don't know, leave the field out. If they don't know a card's APR, say a typical card is around 20–30% and they can add it later.
+- **Card payments and spending**: put the monthly amount in the card's `payment`. Only add "Debt payments" transactions if they want card payments counted in monthly spending; if they also log card purchases, that would count the same money twice.
+- Non-credit-card debts (car loan, student loan, personal loan, buy-now-pay-later) can go in `cards` with balance, rate and payment if they want them in the payoff plan. Put "loan" in the name.
+- Don't invent past or future months of transactions. Recurring things belong in `bills` and `income`, not as repeated transactions.
+
+### How FinTrack works out what's due (so your answers match the dashboard)
+- The next due date is the first scheduled date on or after today (monthly: `dueDay` each month; others: step from `nextDue` by 7 days, 14 days, 3 months or 12 months).
+- If `lastPaid` is set, that payment covers the first due date on or after (`lastPaid` − grace), where grace is half the period (weekly 3 days, biweekly 7, monthly 15, quarterly 45, yearly 182). The next due date after that one is what's owed; if it's before today, it's **overdue**.
+- With no `lastPaid`, a recurring bill is never shown as overdue (FinTrack doesn't know the history). `autopay: true` is never overdue.
+- Cards use `dueDay` the same way, with the latest `history` payment as `lastPaid`.
+
+## Privacy rules (always)
+- Never ask for, and never store, card numbers, account numbers, CVV codes, PINs, passwords, Social Security / national ID numbers or online banking logins. If the user says one, leave it out and use a nickname like "Chase Visa".
 - Don't add notes about the user that they didn't ask for.
-- FinTrack only stores what's in the import on the user's own device. The page keeps link data after the `#`, which browsers never send to the website.
+- The file is plain text so you can read it; remind them to keep it somewhere private. What they share with you goes to the company that runs you, under its privacy policy; FinTrack itself sends nothing.
 
-## The import format
+## Quick import (one-off additions)
 
-A single JSON object. Only `"fintrack": "import"` is required, plus at least one card or transaction.
+A small JSON object with `"fintrack": "import"` and any of `cards`, `bills`, `income`, `transactions`. The user pastes it into Load (or opens a link) and reviews it. Cards, bills and income whose **id or name** matches an existing one are updated (only the fields you include change); identical transactions are skipped. Use this only when a full file isn't practical; a full file is better because you can see their current state.
 
 ```json
 {
@@ -33,84 +71,63 @@ A single JSON object. Only `"fintrack": "import"` is required, plus at least one
   "version": 1,
   "currency": "USD",
   "cards": [
-    {
-      "name": "Chase Visa",
-      "balance": 3400,
-      "apr": 24.99,
-      "payment": 200,
-      "limit": 8000,
-      "min": 95,
-      "notes": "0% promo ends in June"
-    }
+    { "name": "Chase Visa", "balance": 3400, "apr": 24.99, "payment": 200, "limit": 8000, "min": 95, "notes": "0% promo ends in June" }
+  ],
+  "bills": [
+    { "name": "Trash pickup", "amount": 35, "frequency": "monthly", "dueDay": 15, "category": "Utilities" }
+  ],
+  "income": [
+    { "name": "Paycheck", "amount": 2100, "frequency": "biweekly", "nextDue": "2026-11-27" }
   ],
   "transactions": [
-    { "date": "2026-11-01", "type": "income",  "amount": 4200, "category": "Salary",    "description": "Paycheck" },
-    { "date": "2026-11-03", "type": "expense", "amount": 1450, "category": "Housing",   "description": "Rent" },
     { "date": "2026-11-08", "type": "expense", "amount": 62.4, "category": "Groceries", "description": "Costco", "card": "Chase Visa" }
   ]
 }
 ```
 
-### Fields
+In an import, `card` may be the card's name. `currency` is optional (USD, CAD, EUR, GBP, AUD, NZD, INR, JPY, MXN, ZAR, CHF, SEK, NOK, DKK, SGD, PHP, BRL). Optional one-tap link, only if you can run code to build it: the FinTrack page address + `#import=` + `encodeURIComponent(JSON.stringify(importObject))`. Don't percent-encode by hand.
 
-`currency` (optional): ISO code. Supported: USD, CAD, EUR, GBP, AUD, NZD, INR, JPY, MXN, ZAR, CHF, SEK, NOK, DKK, SGD, PHP, BRL. Leave it out if unsure.
+## New FinTrack file template
 
-`cards[]`:
-| field | meaning |
-|---|---|
-| `name` | Short nickname, max 60 characters. **If it matches a card already in FinTrack (case-insensitive), that card is updated** instead of a duplicate being added, so reuse the user's names. |
-| `balance` | What they owe right now. Plain number, no currency symbol. |
-| `apr` | Annual rate in percent: `24.99` means 24.99%. Omit if unknown. |
-| `payment` | What they actually pay each month. Omit if unknown (FinTrack estimates from the minimum). |
-| `limit` | Credit limit (optional). |
-| `min` | Minimum payment (optional; FinTrack estimates it if missing). |
-| `notes` | Optional, max 300 characters, e.g. promo rate end dates. |
-
-`transactions[]`:
-| field | meaning |
-|---|---|
-| `date` | `YYYY-MM-DD`. Use today's date if they don't say; use the 1st of the month for "monthly" items with no day. |
-| `type` | `"income"` (money in) or `"expense"` (money out). |
-| `amount` | Positive number. |
-| `category` | Short, reusable label (max 40): Salary, Side income, Housing, Groceries, Dining, Utilities, Transport, Insurance, Subscriptions, Shopping, Health, Debt payments, Other. |
-| `description` | Optional, max 120. |
-| `card` | Optional: the `name` of a card this was charged to. |
-
-### Rules of thumb
-
-- **Numbers are plain numbers**: `3400`, not `"$3,400"` or `"3.4k"`. (The page tolerates `"$3,400"` but not `"3.4k"`.)
-- **Recurring items** ("rent is 1,450 a month", "I get paid 2,100 every other Friday"): record what happens in the **current month** only, one entry per occurrence if they gave dates (or one monthly total if not). Don't invent past or future months.
-- **Card payments**: put the monthly amount in the card's `payment` field. Only also add a "Debt payments" expense if the user wants their card payments counted in their monthly spending; if they're also logging the card purchases as expenses, that would count the same money twice.
-- **Don't subtract payments from a balance yourself.** `balance` is what they say they owe now.
-- **Non-credit-card debts** (car loan, student loan, personal loan, buy-now-pay-later) can go in `cards` with their balance, rate and payment if the user wants them in the payoff plan. Add "loan" to the name so it's clear.
-- If they're adding to data that's already in FinTrack, only include what's new or changed. Matching card names update; identical transactions (same date, type, amount, category and description) are skipped.
-
-## Example
-
-User (voice): "Okay so I've got, um, the Discover card, I owe like eleven hundred on that, it's twenty-six percent I think, and I pay a hundred a month. And the Capital One is about twenty-eight hundred, I don't know the rate, I pay the minimum which is like seventy-five. I make about four grand a month after tax, rent's fourteen hundred on the first, and I spend maybe five hundred on groceries."
-
-You: "Got it: Discover at $1,100 and 26%, paying $100 a month; Capital One at about $2,800, rate unknown, paying the $75 minimum; $4,000 a month in; $1,400 rent and about $500 on groceries. I left the Capital One rate blank so FinTrack will flag it; you can add it later from your statement. Your import is in the chat: open FinTrack, tap Load, paste it, and check the preview."
+Fill this in from what the user told you (revision 1, one log entry), and give them the whole thing. Schema: https://theguy444.github.io/Fin-track/fintrack.schema.json. Example: https://github.com/TheGuy444/Fin-track/blob/main/examples/fintrack.example.json
 
 ```json
 {
-  "fintrack": "import",
-  "version": 1,
-  "currency": "USD",
-  "cards": [
-    { "name": "Discover", "balance": 1100, "apr": 26, "payment": 100 },
-    { "name": "Capital One", "balance": 2800, "payment": 75, "min": 75 }
-  ],
-  "transactions": [
-    { "date": "2026-11-01", "type": "income",  "amount": 4000, "category": "Salary",    "description": "Monthly take-home pay" },
-    { "date": "2026-11-01", "type": "expense", "amount": 1400, "category": "Housing",   "description": "Rent" },
-    { "date": "2026-11-01", "type": "expense", "amount": 500,  "category": "Groceries", "description": "Groceries (estimate for the month)" }
-  ]
+  "fintrack": "profile",
+  "version": 3,
+  "$schema": "https://theguy444.github.io/Fin-track/fintrack.schema.json",
+  "_readme": "This is a FinTrack file: your own finances, kept by you. There is no account and no server. Open https://theguy444.github.io/Fin-track/ and Load (or drop) this file to see your dashboard. To have an AI assistant update it, give it this whole file and say what changed; the rules it follows are in _agent.",
+  "_agent": {
+    "what": "FinTrack file: the owner's personal finances. They keep this file; there is no account or server. They load it at https://theguy444.github.io/Fin-track/ to see their dashboard.",
+    "spec": "https://theguy444.github.io/Fin-track/llms.txt",
+    "rules": [
+      "You are helping the owner keep this file up to date. Answer questions from it, and when they tell you something changed, edit it.",
+      "After any edit, reply with a one-line summary and the COMPLETE updated file in a single ```json code block. Never send only a fragment unless they ask for an import.",
+      "Change only what they asked. Keep every other entry, id and field exactly as it was, including fields you don't recognise.",
+      "On every edit: revision + 1; updatedAt = current date-time (ISO 8601); updatedBy = \"assistant\"; append {\"rev\", \"at\", \"by\": \"assistant\", \"summary\"} to log.",
+      "Numbers are plain numbers (3400, not \"$3,400\"). apr is a percent (24.99). Dates are YYYY-MM-DD.",
+      "New items get a short unique id made from the name (\"trash\", \"chase-visa\"). Link to cards by id.",
+      "bills and income repeat by frequency: weekly, biweekly, monthly, quarterly, yearly or once. monthly needs dueDay (1-31). The others need nextDue: any real due date; it repeats from there.",
+      "\"I paid <bill>\": set that bill's lastPaid to the date and add an expense transaction (bill = its id) unless they say not to. \"I paid <card> $X\": subtract X from its balance and add a history entry {kind: \"payment\"}; no transaction unless asked.",
+      "Ask one short question when something important is missing (a card's APR, a bill's due day). If they don't know, leave the field out; never guess.",
+      "Never store card or account numbers, CVV, PINs, passwords, SSNs or logins, even if the owner types them. Use nicknames like \"Chase Visa\".",
+      "If they share a file with a lower revision than one you produced earlier in this chat, ask which one is current before editing.",
+      "Due dates, totals and payoff dates you give are estimates; tell them to check against their statements."
+    ]
+  },
+  "revision": 1,
+  "updatedAt": "2026-11-25T18:00:00Z",
+  "updatedBy": "assistant",
+  "settings": { "currency": "USD" },
+  "cards": [],
+  "bills": [],
+  "income": [],
+  "history": [],
+  "transactions": [],
+  "log": [ { "rev": 1, "at": "2026-11-25T18:00:00Z", "by": "assistant", "summary": "Created from what you told me" } ]
 }
 ```
 
-(Use the real current month in your dates, not the example's.)
-
 ## Notes
-
-- FinTrack gives estimates for planning, not financial advice. If the user asks what to pay first, you can mention that FinTrack's Payoff plan compares avalanche (highest APR first) and snowball (smallest balance first).
-- Full save codes (text starting `FT2.`) are a different, compressed format made by FinTrack itself. Don't try to create or decode them; use the import format above.
+- FinTrack gives estimates for planning, not financial advice. If asked what to pay first, FinTrack's Payoff plan compares avalanche (highest APR first) and snowball (smallest balance first).
+- Save codes (text starting `FT2.`) are FinTrack's own compressed, optionally encrypted backups. Don't try to create or decode them; ask the user for their `fintrack.json` instead (Save & data → Download fintrack.json, or Copy for Claude).

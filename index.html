@@ -195,7 +195,7 @@ details.more[open]>summary::before{transform:rotate(45deg)}
 .hist-row button{padding:3px 8px;font-size:12px}
 .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .step{border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--tile)}
-.step b{display:block;margin-bottom:4px}
+.step>b{display:block;margin-bottom:4px}
 .step p{margin:0}
 .welcome{border-color:var(--accent-line)}
 .welcome h2{font-size:20px!important}
@@ -299,6 +299,39 @@ hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
 .morelist{display:grid;gap:8px}
 .morelist button{display:flex;gap:12px;align-items:center;text-align:left;padding:14px;font-size:15px}
 
+/* ---------- bills, income and what's coming up ---------- */
+.duelist{display:grid;gap:2px}
+.duerow{display:grid;grid-template-columns:58px minmax(0,1fr) auto;gap:2px 12px;align-items:center;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:10px 4px;width:100%}
+.duerow:last-child{border-bottom:0}
+button.duerow:hover{background:var(--panel2);filter:none}
+.duerow .dd{grid-row:1/3;text-align:center;border:1px solid var(--line);border-radius:9px;background:var(--tile);padding:4px 0;line-height:1.15}
+.duerow .dd b{display:block;font-size:17px;font-variant-numeric:tabular-nums}
+.duerow .dd span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.duerow .dd.over{border-color:var(--danger-line);background:var(--danger-bg)}
+.duerow .nm{font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.duerow .meta{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.duerow .amt{font-weight:750;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.duerow .st{text-align:right;font-size:12px;white-space:nowrap}
+.billrow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:2px 12px;align-items:center;border-bottom:1px solid var(--line);padding:11px 4px}
+.billrow:last-child{border-bottom:0}
+.billrow .info{background:transparent;border:0;padding:0;text-align:left;min-width:0;display:grid;gap:1px}
+.billrow .info:hover{filter:none}
+.billrow .info:hover .nm{color:var(--blue)}
+.billrow .nm{font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.billrow .meta{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.billrow .right{text-align:right;display:grid;gap:3px;justify-items:end}
+.billrow .amt{font-weight:750;font-variant-numeric:tabular-nums}
+.billrow .pay{padding:7px 11px;font-size:13px}
+.cashsum.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.budget{display:grid;gap:9px}
+.budget .summary-row b{font-size:15px}
+.budget .total{border-top:1px solid var(--line2);padding-top:10px}
+.budget .total b{font-size:20px}
+.loglist{display:grid;gap:4px;margin-top:8px}
+.loglist div{font-size:12px;color:var(--muted);display:flex;gap:8px}
+.loglist b{color:var(--label);font-weight:600;white-space:nowrap}
+.droptarget::after{content:'Drop your FinTrack file to load it';position:fixed;inset:12px;border:3px dashed var(--accent-line);border-radius:18px;background:color-mix(in srgb,var(--bg) 82%,transparent);display:grid;place-items:center;font-size:22px;font-weight:700;color:var(--text);z-index:200;pointer-events:none}
+
 /* ---------- responsive ---------- */
 @media(max-width:1100px){.two{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.cards{grid-template-columns:1fr}}
 @media(max-width:760px){
@@ -306,7 +339,7 @@ hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
   .app{grid-template-columns:1fr}
   .sidebar{position:static;height:auto;border:0;background:transparent;padding:14px 16px 0;overflow:visible}
   .sidebox,.side-foot,.sidebar .sub{display:none}
-  .nav{position:fixed;left:0;right:0;bottom:0;margin:0;z-index:50;display:grid;grid-template-columns:repeat(5,1fr);gap:0;background:var(--side);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+  .nav{position:fixed;left:0;right:0;bottom:0;margin:0;z-index:50;display:grid;grid-template-columns:repeat(6,1fr);gap:0;background:var(--side);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
   .nav button{flex-direction:column;gap:3px;padding:6px 2px;font-size:11px;text-align:center;justify-content:center;border-radius:10px}
   .nav button.active{background:transparent;border-color:transparent;color:var(--blue)}
   .nav .lbl-l,.nav [data-page="reports"],.nav [data-page="settings"]{display:none}
@@ -327,6 +360,11 @@ hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
   .field.full{grid-column:auto}
   .field input,.field select,.input,.month-controls input,.whatif input{font-size:16px}
   .cashsum b{font-size:15px}
+  .cashsum.four{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .billrow{grid-template-columns:minmax(0,1fr) auto;row-gap:6px}
+  .billrow .info{grid-column:1/-1}
+  .billrow .right{display:flex;gap:10px;align-items:baseline;justify-items:start;text-align:left;flex-wrap:wrap}
+  .duerow .st{white-space:normal}
   .tk-items{gap:8px}.tk{padding:8px 10px}.tk-price{font-size:15px}.tk-price small{display:none}.tk-chg{font-size:12px}
   .cc-facts b{font-size:13px}
   .barrow{grid-template-columns:96px 1fr 80px}
@@ -355,6 +393,7 @@ hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
   <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="i-trend" viewBox="0 0 24 24"><path d="M4 17l6-6 4 4 7-8"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><path d="M7.5 14h2M11 14h2M14.5 14h2M7.5 17h2M11 17h2"/></symbol>
 </svg>
 <div class="app">
 <aside class="sidebar">
@@ -362,6 +401,7 @@ hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
   <nav class="nav" id="nav" aria-label="Main">
     <button class="active" data-page="dashboard" type="button"><svg class="i"><use href="#i-home"/></svg><span class="lbl-l">Dashboard</span><span class="lbl-s">Home</span></button>
     <button data-page="cards" type="button"><svg class="i"><use href="#i-card"/></svg><span class="lbl-l">Credit cards</span><span class="lbl-s">Cards</span></button>
+    <button data-page="bills" type="button"><svg class="i"><use href="#i-cal"/></svg><span class="lbl-l">Bills &amp; due dates</span><span class="lbl-s">Bills</span></button>
     <button data-page="plan" type="button"><svg class="i"><use href="#i-flag"/></svg><span class="lbl-l">Payoff plan</span><span class="lbl-s">Plan</span></button>
     <button data-page="transactions" type="button"><svg class="i"><use href="#i-list"/></svg><span class="lbl-l">Transactions</span><span class="lbl-s">Activity</span></button>
     <button data-page="reports" type="button"><svg class="i"><use href="#i-chart"/></svg><span class="lbl-l">Reports</span><span class="lbl-s">Reports</span></button>
@@ -370,7 +410,7 @@ hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
   </nav>
   <div class="sidebox"><h4>THIS MONTH</h4><div class="summary-list" id="sideSummary"></div></div>
   <div class="sidebox"><h4>YOUR DATA</h4><div class="small">Nothing is sent to any server. Use <b>Save</b> now and then to get a backup code for your notepad, and <b>Load</b> to bring it back.</div><div class="small" id="deviceNote" style="margin-top:6px"></div></div>
-  <div class="tiny side-foot" style="margin-top:auto">v2.2 · <kbd>N</kbd> new transaction · <kbd>Ctrl</kbd>+<kbd>S</kbd> save</div>
+  <div class="tiny side-foot" style="margin-top:auto">v3.0 · <kbd>N</kbd> new transaction · <kbd>Ctrl</kbd>+<kbd>S</kbd> save</div>
 </aside>
 <main class="main">
   <header class="top">
@@ -395,9 +435,14 @@ hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
         <div class="step"><b>2 · Log payments as you go</b><p class="small">Watch the balance drop and your debt-free date move closer.</p></div>
         <div class="step"><b>3 · Back up now and then</b><p class="small">Click <b>Save</b> for a backup code you keep. Load it on any device.</p></div>
       </div>
-      <div class="row tight"><button class="primary" id="wAddCard" type="button">＋ Add my first card</button><button id="wAi" type="button">🎙 Tell an AI assistant instead</button><button id="wLoad" type="button">Load my save code</button><button class="ghost" id="wSample" type="button">Try it with sample data</button></div>
+      <div class="row tight"><button class="primary" id="wAddCard" type="button">＋ Add my first card</button><button id="wAi" type="button">🎙 Tell an AI assistant instead</button><button id="wLoad" type="button">Open my FinTrack file or save code</button><button class="ghost" id="wSample" type="button">Try it with sample data</button></div>
+      <p class="tiny" style="margin:10px 0 0">Have a <b>fintrack.json</b> file from Claude or another assistant? Drop it anywhere on this page.</p>
     </div>
     <section class="panel hero" id="hero"></section>
+    <div class="grid two" id="dueRow">
+      <section class="panel"><div class="panel-head"><h2>Coming up</h2><button class="link" data-goto="bills" type="button">All bills →</button></div><div id="upcoming"></div></section>
+      <section class="panel"><div class="panel-head"><h2>Your month, planned</h2><span class="pill">From your bills &amp; income</span></div><div id="budget"></div></section>
+    </div>
     <div class="grid two">
       <section class="panel"><div class="panel-head"><h2>Your cards</h2><button id="addCardTop" type="button">＋ Add card</button></div><div id="cardList"></div></section>
       <section class="panel"><div class="panel-head"><h2>Debt payoff projection</h2><span class="pill">At current payments</span></div><div id="debtChart"></div></section>
@@ -412,6 +457,18 @@ hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
   <section id="cardsPage" class="hidden">
     <div class="panel-head"><div class="small">Tap <b>Log payment</b> each time you pay a card. Use <b>⋯ → Add charge</b> for new purchases, interest or fees.</div><button class="primary" id="addCard" type="button">＋ Add credit card</button></div>
     <div id="cardsGrid" class="cards"></div>
+  </section>
+
+  <!-- BILLS & INCOME -->
+  <section id="billsPage" class="hidden">
+    <div id="billsSummary" class="cashsum four"></div>
+    <div class="grid two">
+      <section class="panel"><div class="panel-head"><h2>Bills</h2><button class="primary" id="addBill" type="button">＋ Add bill</button></div><div id="billsList"></div></section>
+      <div>
+        <section class="panel"><div class="panel-head"><h2>Next 30 days</h2></div><div id="billsUpcoming"></div></section>
+        <section class="panel"><div class="panel-head"><h2>Income</h2><button id="addIncome" type="button">＋ Add income</button></div><div id="incomeList"></div></section>
+      </div>
+    </div>
   </section>
 
   <!-- PAYOFF PLAN -->
@@ -447,34 +504,48 @@ hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
 
   <!-- SETTINGS -->
   <section id="settingsPage" class="hidden">
+    <div class="panel" id="filePanel"><h2>Your FinTrack file · let Claude manage it</h2>
+      <p class="small">Everything (cards, bills, due dates, income, transactions) fits in one file, <b>fintrack.json</b>, that you keep. Load it here to see your dashboard. Give it to an AI assistant such as Claude and it can answer questions and make changes for you. No account, no login: you supply the numbers.</p>
+      <ol class="small steps-list">
+        <li><b>Get your file:</b> tap <b>Download fintrack.json</b> (or link an auto-save file below so it's always current).</li>
+        <li><b>Give it to Claude:</b> attach the file, or tap <b>Copy for Claude</b> and paste. Then talk normally: “my trash bill is $35 a month, due the 15th”, “I paid the Discover $200”, “what's due this week?”</li>
+        <li><b>Bring it back:</b> Claude replies with the updated file. Save it over your old one and drop it on this page (or <b>Load</b> it). You'll see what changed before anything is replaced.</li>
+      </ol>
+      <div class="row tight"><button class="primary" id="fileDownload" type="button">Download fintrack.json</button><button id="fileCopy" type="button">Copy for Claude</button><button id="fileLoad" type="button">Load a file…</button></div>
+      <div id="fileInfo" style="margin-top:12px"></div>
+      <div class="callout warning" style="margin-top:12px">The file is plain text so assistants can read it: keep it somewhere private. What you share with an AI assistant goes to the company that runs it, under their privacy policy; FinTrack itself sends nothing. Never put card numbers, account numbers or passwords in it. FinTrack doesn't need them.</div>
+    </div>
     <div class="panel"><h2>How saving works</h2>
       <div class="steps" style="margin-top:12px">
         <div class="step"><b>This browser (automatic)</b><p class="small">Every change is kept in this browser right away. Nothing to click.</p></div>
         <div class="step"><b>Backup code (any device)</b><p class="small">Click <b>Save</b>, copy the code into a notepad file such as <i>fintrack-save.txt</i>. Add a passphrase to encrypt it. <b>Load</b> brings it back.</p></div>
         <div class="step"><b>Auto-save file (Chrome/Edge)</b><p class="small">Link a file on your computer and every change is written to it automatically.</p></div>
       </div>
-      <div class="row tight" style="margin-top:14px"><button class="save" id="sSave" type="button">Save code…</button><button id="sLoad" type="button">Load…</button><button id="exportJson" type="button">Download backup (.json)</button></div>
+      <div class="row tight" style="margin-top:14px"><button class="save" id="sSave" type="button">Save code…</button><button id="sLoad" type="button">Load…</button><button id="exportJson" type="button">Download fintrack.json</button></div>
     </div>
-    <div class="panel" id="aiPanel"><h2>Set it up by talking to an AI assistant</h2>
-      <p class="small">Rather not type it all in? Open an AI assistant that can read web pages (text or voice chat) and say:</p>
-      <div class="callout prompt"><q id="aiPrompt">Read https://theguy444.github.io/Fin-track/llms.txt and help me put my finances into FinTrack.</q><button id="aiCopy" type="button">Copy</button></div>
+    <div class="panel" id="aiPanel"><h2>Starting from scratch? Talk it through</h2>
+      <p class="small">No file yet? Open an AI assistant (text or voice chat) and say:</p>
+      <div class="callout prompt"><q id="aiPrompt">Read https://theguy444.github.io/Fin-track/llms.txt and help me make my FinTrack file.</q><button id="aiCopy" type="button">Copy</button></div>
       <ol class="small steps-list">
-        <li>Tell it about your cards, income and bills in your own words. Messy is fine; it will ask about anything important that's missing.</li>
-        <li>It gives you an import: a block of text starting with <code>{"fintrack": "import"</code>, or sometimes a link. Copy the text and paste it into <b>Load</b>, or tap the link.</li>
-        <li>FinTrack shows you a preview. Check the numbers, tap <b>Import</b>, then <b>Save</b> to keep a backup code.</li>
+        <li>Tell it about your cards, bills, due dates and income in your own words. Messy is fine; it asks about anything important that's missing.</li>
+        <li>It gives you a FinTrack file (or a short import). Drop it on this page or paste it into <b>Load</b>.</li>
+        <li>Check the preview, tap <b>Load</b> or <b>Import</b>, then keep the file for next time.</li>
       </ol>
-      <div class="row tight"><button class="primary" id="aiPaste" type="button">Paste an import…</button></div>
-      <div class="callout warning" style="margin-top:12px">What you say to an AI assistant goes to the company that runs it, under their privacy policy. FinTrack itself still sends nothing. Never give an assistant card numbers, account numbers or passwords; FinTrack doesn't need them.</div>
-      <details class="more"><summary>For AI assistants: the import format</summary>
-        <p class="small">Full instructions: <a href="llms.txt">llms.txt</a>. Give the user one JSON object in a code block (don't read it aloud in voice chat). Numbers are plain numbers; APR is a percent; dates are YYYY-MM-DD; a card <i>name</i> that matches an existing card updates it. Never include card or account numbers.</p>
+      <div class="row tight"><button class="primary" id="aiPaste" type="button">Paste from an assistant…</button></div>
+      <details class="more"><summary>For AI assistants: formats</summary>
+        <p class="small">Full instructions: <a href="llms.txt">llms.txt</a>, schema: <a href="fintrack.schema.json">fintrack.schema.json</a>. Prefer the <b>FinTrack file</b> (<code>"fintrack": "profile"</code>): it holds everything and carries its own rules in <code>_agent</code>. Change only what the user asked, bump <code>revision</code>, add a <code>log</code> entry, and return the whole file in one code block. Never include card or account numbers.</p>
 <pre class="schema">{
-  "fintrack": "import", "version": 1, "currency": "USD",
-  "cards": [{ "name": "Chase Visa", "balance": 3400, "apr": 24.99,
-              "payment": 200, "limit": 8000, "min": 95, "notes": "" }],
-  "transactions": [{ "date": "2026-11-01", "type": "income", "amount": 4200,
-                     "category": "Salary", "description": "Paycheck", "card": "" }]
+  "fintrack": "profile", "version": 3, "revision": 4,
+  "settings": { "currency": "USD" },
+  "cards": [{ "id": "chase-visa", "name": "Chase Visa", "balance": 3400,
+              "apr": 24.99, "payment": 200, "dueDay": 18 }],
+  "bills": [{ "id": "trash", "name": "Trash pickup", "amount": 35,
+              "frequency": "monthly", "dueDay": 15, "category": "Utilities" }],
+  "income": [{ "id": "pay", "name": "Paycheck", "amount": 2100,
+               "frequency": "biweekly", "nextDue": "2026-11-27" }],
+  "transactions": [], "history": [], "log": []
 }</pre>
-        <p class="small">Optional one-tap link (only if you can run code to build it): this page's address + <code>#import=</code> + <code>encodeURIComponent(JSON.stringify(obj))</code>. The part after <code>#</code> never reaches any server.</p>
+        <p class="small">Quick one-off additions can use a <b>FinTrack import</b> (<code>"fintrack": "import"</code>) with <code>cards</code>, <code>bills</code>, <code>income</code> and <code>transactions</code>; matching ids or names are updated. Optional one-tap link: this page's address + <code>#import=</code> + <code>encodeURIComponent(JSON.stringify(obj))</code>.</p>
       </details>
     </div>
     <div class="panel"><h2>Auto-save to a file</h2><div id="fsPanel" style="margin-top:10px"></div></div>
@@ -513,6 +584,8 @@ hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
     <div class="field"><label for="cPayment">What you pay each month</label><input id="cPayment" type="number" inputmode="decimal" min="0" step=".01" required placeholder="0.00"></div>
     <div class="field"><label for="cLimit">Credit limit <span class="muted">(optional)</span></label><input id="cLimit" type="number" inputmode="decimal" min="0" step=".01" placeholder="For utilization"></div>
     <div class="field full"><label for="cMin">Minimum payment <span class="muted">(optional)</span></label><input id="cMin" type="number" inputmode="decimal" min="0" step=".01"><div class="hint" id="cMinHint">Leave blank and we'll estimate it from the balance.</div></div>
+    <div class="field"><label for="cDue">Payment due day <span class="muted">(optional)</span></label><input id="cDue" type="number" inputmode="numeric" min="1" max="31" step="1" placeholder="e.g. 18"><div class="hint">Day of the month. Shows up in “Coming up”.</div></div>
+    <div class="field"><span class="lab">&nbsp;</span><label class="check" style="margin:6px 0 0"><input type="checkbox" id="cAutopay"><span>Autopay is on</span></label></div>
   </div>
   <details class="more" id="cardAdv"><summary>Planning options</summary>
     <div class="formgrid" style="margin-top:10px">
@@ -540,6 +613,25 @@ hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
   <div class="dlg-foot"><button class="primary" type="submit">Save</button><button type="button" id="txSaveAnother">Save &amp; add another</button><span class="spacer"></span><button type="button" class="danger hidden" id="txDelete">Delete</button></div>
 </form></dialog>
 
+<!-- BILL / INCOME SHEET -->
+<dialog id="billDlg" class="sheet" aria-labelledby="billTitle"><form class="dlg" id="billForm" autocomplete="off">
+  <div class="dlg-head"><h2 id="billTitle">Add a bill</h2><button class="ghost x" data-close type="button" aria-label="Close">✕</button></div>
+  <input type="hidden" id="billId"><input type="hidden" id="billKind" value="bill">
+  <div class="seg full" id="billKindSeg" role="group" aria-label="Kind"><button type="button" data-k="bill" class="on">Bill · money out</button><button type="button" data-k="income">Income · money in</button></div>
+  <div class="formgrid">
+    <div class="field full"><label for="bName">Name</label><input id="bName" required maxlength="60" placeholder="e.g. Trash pickup"></div>
+    <div class="field"><label for="bAmount" id="bAmountLab">Amount</label><input id="bAmount" type="number" inputmode="decimal" min="0" step=".01" required placeholder="0.00"></div>
+    <div class="field"><label for="bFreq">How often</label><select id="bFreq"></select></div>
+    <div class="field" id="bDayWrap"><label for="bDay" id="bDayLab">Due day of the month</label><input id="bDay" type="number" inputmode="numeric" min="1" max="31" step="1" placeholder="e.g. 15"><div class="hint">Short months use their last day.</div></div>
+    <div class="field hidden" id="bDateWrap"><label for="bDate" id="bDateLab">Next due date</label><input id="bDate" type="date"></div>
+    <div class="field"><label for="bCat">Category</label><input id="bCat" list="billCats" maxlength="40" placeholder="e.g. Utilities"><datalist id="billCats"></datalist></div>
+    <div class="field bill-only"><label for="bCard">Charged to a card <span class="muted">(optional)</span></label><select id="bCard"><option value="">No</option></select></div>
+    <div class="field full bill-only"><label class="check" style="margin:2px 0"><input type="checkbox" id="bAuto"><span>Autopay is on <span class="small">(never shows as overdue)</span></span></label><label class="check" style="margin:2px 0"><input type="checkbox" id="bVar"><span>The amount changes, this is an estimate</span></label></div>
+    <div class="field full"><label for="bNotes">Notes <span class="muted">(optional)</span></label><input id="bNotes" maxlength="300"></div>
+  </div>
+  <div class="dlg-foot"><button class="primary" type="submit">Save</button><button type="button" class="ghost" data-close>Cancel</button><span class="spacer"></span><button type="button" class="danger hidden" id="billDelete">Delete</button></div>
+</form></dialog>
+
 <!-- MORE (mobile) -->
 <dialog id="moreDlg" aria-label="More"><div class="dlg">
   <div class="dlg-head"><h2>More</h2><button class="ghost x" data-close type="button" aria-label="Close">✕</button></div>
@@ -560,15 +652,15 @@ hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
   <div class="row"><button id="copyCode" class="save" type="button">Copy to clipboard</button><button id="downloadTxt" type="button">Download as .txt</button></div>
   <hr class="sep">
   <h3>Other ways to keep it</h3>
-  <div class="row"><button id="dlJson" type="button">Download backup (.json)</button><button id="dlgLinkFile" type="button">Auto-save to a file…</button></div>
+  <div class="row"><button id="dlJson" type="button">Download fintrack.json</button><button id="dlgLinkFile" type="button">Auto-save to a file…</button></div>
   <div class="small" id="dlgFsNote"></div>
 </div></dialog>
 
 <!-- LOAD DIALOG -->
 <dialog id="loadDlg" aria-labelledby="loadTitle"><div class="dlg">
   <div class="dlg-head"><h2 id="loadTitle">Load your data</h2><button class="ghost x" data-close type="button" aria-label="Close">✕</button></div>
-  <p class="small">Paste everything from your save note, or an import from an AI assistant (extra text around it is fine), or open the .txt / .json file.</p>
-  <textarea id="loadText" rows="7" placeholder="Paste your save code or AI import here…" aria-label="Save code or import to load"></textarea>
+  <p class="small">Open your <b>fintrack.json</b>, or paste your FinTrack file, a save code, or an import from an AI assistant (extra chat text around it is fine).</p>
+  <textarea id="loadText" rows="7" placeholder="Paste your FinTrack file, save code or AI import here…" aria-label="FinTrack file, save code or import to load"></textarea>
   <div class="field hidden" id="loadPassWrap"><label for="loadPass">🔒 This code is locked. Passphrase</label><input id="loadPass" type="password" autocomplete="current-password"></div>
   <div id="loadErr" class="small red" role="alert"></div>
   <div class="row"><button id="doLoad" class="primary" type="button">Load data</button><button id="loadFileBtn" type="button">Open a file…</button><input type="file" id="loadFile" accept=".txt,.json,text/plain,application/json" class="hidden"></div>
@@ -579,9 +671,9 @@ hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
 <!-- IMPORT REVIEW DIALOG (data prepared by an AI assistant) -->
 <dialog id="importDlg" aria-labelledby="importTitle"><div class="dlg">
   <div class="dlg-head"><h2 id="importTitle">Check your import</h2><button class="ghost x" data-close type="button" aria-label="Close">✕</button></div>
-  <p class="small">This was prepared from what you told an AI assistant. Nothing has changed yet: check the numbers, then import.</p>
+  <p class="small" id="importLead">This was prepared from what you told an AI assistant. Nothing has changed yet: check the numbers, then import.</p>
   <div id="importBody"></div>
-  <div class="dlg-foot"><button class="primary" id="importMerge" type="button">Import</button><button id="importReplace" class="danger hidden" type="button">Replace everything</button><span class="spacer"></span><button type="button" class="ghost" data-close>Cancel</button></div>
+  <div class="dlg-foot"><button class="primary" id="importMerge" type="button">Import</button><button id="importReplace" class="danger hidden" type="button">Replace everything</button><button class="primary hidden" id="profileLoad" type="button">Load this file</button><span class="spacer"></span><button type="button" class="ghost" data-close>Cancel</button></div>
 </div></dialog>
 
 <!-- LOG PAYMENT / CHARGE DIALOG -->
@@ -647,41 +739,107 @@ function fmtDate(s,opt){const d=new Date(s+'T12:00:00');return d.toLocaleDateStr
 const estMin=(bal,apr)=>bal>0?Math.round(Math.min(bal,Math.max(25,bal*0.01+bal*num(apr)/1200))*100)/100:0;
 
 /* ---------- data model ---------- */
-function emptyData(){return {version:2,settings:{currency:'USD',planBudget:null,strategy:'avalanche'},cards:[],history:[],transactions:[],updatedAt:0,meta:{lastBackupAt:0,changes:0,dirtySince:0}}}
+function emptyData(){return {version:3,settings:{currency:'USD',planBudget:null,strategy:'avalanche'},cards:[],bills:[],income:[],history:[],transactions:[],log:[],revision:0,updatedBy:'app',updatedAt:0,meta:{lastBackupAt:0,changes:0,dirtySince:0}}}
+
+const FREQS=['weekly','biweekly','monthly','quarterly','yearly','once'];
+const FREQ_LABEL={weekly:'Every week',biweekly:'Every 2 weeks',monthly:'Monthly',quarterly:'Every 3 months',yearly:'Once a year',once:'One time'};
+const nameKey=s=>String(s||'').trim().toLowerCase();
+const dayNum=v=>{const n=Math.floor(Number(v));return n>=1&&n<=31?n:0};
+const toTime=v=>typeof v==='string'?(Date.parse(v)||0):num(v);
 
 // Every save code / file passes through here, so a pasted code can never inject markup or bad values.
+// Reads v2 backups ({app:'FinTrack'}) and v3 FinTrack files ({fintrack:'profile'}, which assistants edit).
+// References to cards may be the card's id or its name (assistants sometimes use names).
 function sanitize(src,fromBackup){
-  if(!src||typeof src!=='object'||!Array.isArray(src.cards)||!Array.isArray(src.transactions))throw new Error('That doesn’t look like FinTrack data.');
+  const arr=v=>Array.isArray(v)?v:[];
+  const isProfile=src&&typeof src==='object'&&src.fintrack==='profile';
+  if(!src||typeof src!=='object'||(!isProfile&&(!Array.isArray(src.cards)||!Array.isArray(src.transactions))))throw new Error('That doesn’t look like FinTrack data.');
   const d=emptyData(),s=src.settings||{},used=new Set(),idMap=new Map();
   const newId=v=>{let x=String(v??'');if(!/^[A-Za-z0-9_-]{1,40}$/.test(x)||used.has(x))x=uid()+used.size;used.add(x);return x};
-  d.settings.currency=CURRENCIES.includes(s.currency)?s.currency:'USD';
+  const cur=s.currency||src.currency;
+  d.settings.currency=CURRENCIES.includes(cur)?cur:'USD';
   d.settings.planBudget=(s.planBudget==null||s.planBudget==='')?null:num(s.planBudget);
   d.settings.strategy=s.strategy==='snowball'?'snowball':'avalanche';
-  src.cards.slice(0,200).forEach(c=>{
+  arr(src.cards).slice(0,200).forEach(c=>{
     if(!c||typeof c!=='object')return;
     const id=newId(c.id);if(c.id!=null&&c.id!=='')idMap.set(String(c.id),id);
     const bal=num(c.balance);
-    d.cards.push({id,name:str(c.name,60).trim()||'Card',balance:bal,startBalance:c.startBalance==null?bal:num(c.startBalance),limit:num(c.limit),apr:clamp(num(c.apr),0,100),min:num(c.min),payment:num(c.payment),target:clamp(Math.floor(num(c.target))||24,1,600),step:num(c.step),notes:str(c.notes,300)});
+    d.cards.push({id,name:str(c.name,60).trim()||'Card',balance:bal,startBalance:c.startBalance==null?bal:num(c.startBalance),limit:num(c.limit),apr:clamp(num(c.apr),0,100),min:num(c.min),payment:num(c.payment),target:clamp(Math.floor(num(c.target))||24,1,600),step:num(c.step),notes:str(c.notes,300),dueDay:dayNum(c.dueDay),autopay:c.autopay===true,lastPaid:validDate(c.lastPaid)||''});
   });
-  (Array.isArray(src.history)?src.history:[]).slice(0,20000).forEach(h=>{
+  const cardRef=v=>{if(v==null||v==='')return '';const k=String(v);if(idMap.has(k))return idMap.get(k);const c=d.cards.find(c=>nameKey(c.name)===nameKey(k));return c?c.id:''};
+  const sched=(x,o)=>{const f=FREQS.includes(x.frequency)?x.frequency:'monthly';o.frequency=f;o.dueDay=dayNum(x.dueDay);o.nextDue=validDate(x.nextDue)||'';return o};
+  const billIds=new Map();
+  arr(src.bills).slice(0,300).forEach(b=>{
+    if(!b||typeof b!=='object')return;
+    const id=newId(b.id);if(b.id!=null&&b.id!=='')billIds.set(String(b.id),id);
+    d.bills.push(sched(b,{id,name:str(b.name,60).trim()||'Bill',amount:num(b.amount),category:str(b.category,40).trim()||'Bills',autopay:b.autopay===true,variable:b.variable===true,card:cardRef(b.card),lastPaid:validDate(b.lastPaid)||'',notes:str(b.notes,300)}));
+  });
+  arr(src.income).slice(0,100).forEach(i=>{
+    if(!i||typeof i!=='object')return;
+    d.income.push(sched(i,{id:newId(i.id),name:str(i.name,60).trim()||'Income',amount:num(i.amount),category:str(i.category,40).trim()||'Income',notes:str(i.notes,300)}));
+  });
+  arr(src.history).slice(0,20000).forEach(h=>{
     if(!h||typeof h!=='object')return;
-    const cardId=idMap.get(String(h.cardId)),date=validDate(h.date),amount=num(h.amount);
+    const cardId=cardRef(h.card??h.cardId),date=validDate(h.date),amount=num(h.amount);
     if(!cardId||!date||!amount)return;
     d.history.push({id:newId(h.id),cardId,date,kind:h.kind==='charge'?'charge':'payment',amount,note:str(h.note,120)});
   });
-  src.transactions.slice(0,50000).forEach(t=>{
+  arr(src.transactions).slice(0,50000).forEach(t=>{
     if(!t||typeof t!=='object')return;
     const date=validDate(t.date),amount=num(t.amount);if(!date||!amount)return;
-    d.transactions.push({id:newId(t.id),date,type:t.type==='income'?'income':'expense',amount,category:str(t.category,40).trim()||'Other',description:str(t.description,120),account:(t.account&&idMap.get(String(t.account)))||''});
+    d.transactions.push({id:newId(t.id),date,type:t.type==='income'?'income':'expense',amount,category:str(t.category,40).trim()||'Other',description:str(t.description,120),account:cardRef(t.card??t.account),bill:(t.bill!=null&&billIds.get(String(t.bill)))||''});
   });
-  const content=d.cards.length||d.transactions.length;
-  d.updatedAt=num(src.updatedAt)||(content?Date.now():0);
+  d.log=arr(src.log).slice(-200).filter(e=>e&&typeof e==='object').map(e=>({rev:Math.floor(num(e.rev)),at:str(e.at,40),by:str(e.by,20)||'app',summary:str(e.summary,200)}));
+  d.revision=Math.floor(num(src.revision));
+  d.updatedBy=str(src.updatedBy,20)||'app';
+  const content=d.cards.length||d.transactions.length||d.bills.length||d.income.length;
+  d.updatedAt=toTime(src.updatedAt)||(content?Date.now():0);
   d.meta.lastBackupAt=fromBackup?d.updatedAt:Math.min(num(src.meta&&src.meta.lastBackupAt),d.updatedAt);
   if(!fromBackup&&src.meta){d.meta.changes=Math.floor(num(src.meta.changes));d.meta.dirtySince=num(src.meta.dirtySince)}
   return d;
 }
-function exportObj(){return {app:'FinTrack',version:2,exportedAt:new Date().toISOString(),updatedAt:data.updatedAt,settings:data.settings,cards:data.cards,history:data.history,transactions:data.transactions}}
-const hasContent=()=>!!(data.cards.length||data.transactions.length||data.history.length);
+
+/* ---------- the FinTrack file (fintrack.json) ---------- */
+// The person keeps this file. FinTrack loads and writes it; AI assistants edit it by following _agent.
+// Keep _agent in step with examples/fintrack.example.json and skill/fintrack/scripts/fintrack.py.
+const SITE=location.protocol==='file:'?'https://theguy444.github.io/Fin-track/':location.href.split('#')[0].split('?')[0].replace(/[^/]*$/,'');
+const AGENT={
+  what:'FinTrack file: the owner\'s personal finances. They keep this file; there is no account or server. They load it at '+SITE+' to see their dashboard.',
+  spec:SITE+'llms.txt',
+  rules:[
+    'You are helping the owner keep this file up to date. Answer questions from it, and when they tell you something changed, edit it.',
+    'After any edit, reply with a one-line summary and the COMPLETE updated file in a single ```json code block. Never send only a fragment unless they ask for an import.',
+    'Change only what they asked. Keep every other entry, id and field exactly as it was, including fields you don\'t recognise.',
+    'On every edit: revision + 1; updatedAt = current date-time (ISO 8601); updatedBy = "assistant"; append {"rev", "at", "by": "assistant", "summary"} to log.',
+    'Numbers are plain numbers (3400, not "$3,400"). apr is a percent (24.99). Dates are YYYY-MM-DD.',
+    'New items get a short unique id made from the name ("trash", "chase-visa"). Link to cards by id.',
+    'bills and income repeat by frequency: weekly, biweekly, monthly, quarterly, yearly or once. monthly needs dueDay (1-31). The others need nextDue: any real due date; it repeats from there.',
+    '"I paid <bill>": set that bill\'s lastPaid to the date and add an expense transaction (bill = its id) unless they say not to. "I paid <card> $X": subtract X from its balance and add a history entry {kind: "payment"}; no transaction unless asked.',
+    'Ask one short question when something important is missing (a card\'s APR, a bill\'s due day). If they don\'t know, leave the field out; never guess.',
+    'Never store card or account numbers, CVV, PINs, passwords, SSNs or logins, even if the owner types them. Use nicknames like "Chase Visa".',
+    'If they share a file with a lower revision than one you produced earlier in this chat, ask which one is current before editing.',
+    'Due dates, totals and payoff dates you give are estimates; tell them to check against their statements.'
+  ]
+};
+const README='This is a FinTrack file: your own finances, kept by you. There is no account and no server. Open '+SITE+' and Load (or drop) this file to see your dashboard. To have an AI assistant update it, give it this whole file and say what changed; the rules it follows are in _agent.';
+// Leave out empty optional fields so the file stays short and easy for a person or an assistant to read.
+const tidy=o=>{Object.keys(o).forEach(k=>{const v=o[k];if(v===''||v==null||v===false||(v===0&&!['balance','amount','revision','apr'].includes(k)))delete o[k]});return o};
+function exportObj(){
+  const sch=x=>x.frequency==='monthly'?{frequency:x.frequency,dueDay:x.dueDay||(x.nextDue?+x.nextDue.slice(8):0),nextDue:x.dueDay?'':x.nextDue}:{frequency:x.frequency,nextDue:x.nextDue,dueDay:0};
+  return {
+    fintrack:'profile',version:3,$schema:SITE+'fintrack.schema.json',_readme:README,_agent:AGENT,
+    revision:data.revision||0,updatedAt:new Date(data.updatedAt||Date.now()).toISOString(),updatedBy:data.updatedBy||'app',
+    settings:tidy({currency:data.settings.currency,planBudget:data.settings.planBudget,strategy:data.settings.strategy}),
+    cards:data.cards.map(c=>tidy({id:c.id,name:c.name,balance:c.balance,apr:c.apr,payment:c.payment,min:c.min,limit:c.limit,dueDay:c.dueDay,autopay:c.autopay,lastPaid:c.lastPaid,startBalance:c.startBalance!==c.balance?c.startBalance:'',target:c.target!==24?c.target:'',step:c.step!==25?c.step:'',notes:c.notes})),
+    bills:data.bills.map(b=>tidy({id:b.id,name:b.name,amount:b.amount,category:b.category,...sch(b),autopay:b.autopay,variable:b.variable,card:b.card,lastPaid:b.lastPaid,notes:b.notes})),
+    income:data.income.map(i=>tidy({id:i.id,name:i.name,amount:i.amount,category:i.category,...sch(i),notes:i.notes})),
+    history:data.history.map(h=>tidy({id:h.id,card:h.cardId,date:h.date,kind:h.kind,amount:h.amount,note:h.note})),
+    transactions:data.transactions.map(t=>tidy({id:t.id,date:t.date,type:t.type,amount:t.amount,category:t.category,description:t.description,card:t.account,bill:t.bill})),
+    log:data.log
+  };
+}
+const profileText=()=>JSON.stringify(exportObj(),null,2)+'\n';
+const hasContent=()=>!!(data.cards.length||data.transactions.length||data.history.length||data.bills.length||data.income.length);
 const isDirty=()=>hasContent()&&data.updatedAt>data.meta.lastBackupAt;
 // Only nudge for a backup after real changes pile up (10 edits) or a week passes. The browser copy is already saved.
 const backupDue=()=>isDirty()&&!fileHandle&&((data.meta.changes||0)>=10||(data.meta.dirtySince&&Date.now()-data.meta.dirtySince>7*DAY));
@@ -691,10 +849,20 @@ function sampleData(){
   const d=emptyData();
   const ym=k=>{const x=new Date();x.setDate(1);x.setMonth(x.getMonth()-k);return ymOf(x)};
   d.cards=[
-    {id:'demo-visa',name:'Rewards Visa (sample)',balance:3000,startBalance:4200,limit:10000,apr:22.99,min:90,payment:250,target:24,step:25,notes:'Sample card. Edit or delete me.'},
-    {id:'demo-store',name:'Store Card (sample)',balance:850,startBalance:1100,limit:2000,apr:27.49,min:35,payment:80,target:12,step:20,notes:''},
-    {id:'demo-travel',name:'Travel Mastercard (sample)',balance:600,startBalance:700,limit:3000,apr:19.99,min:25,payment:50,target:12,step:15,notes:''}
+    {id:'demo-visa',name:'Rewards Visa (sample)',balance:3000,startBalance:4200,limit:10000,apr:22.99,min:90,payment:250,target:24,step:25,notes:'Sample card. Edit or delete me.',dueDay:14,autopay:false,lastPaid:''},
+    {id:'demo-store',name:'Store Card (sample)',balance:850,startBalance:1100,limit:2000,apr:27.49,min:35,payment:80,target:12,step:20,notes:'',dueDay:22,autopay:true,lastPaid:''},
+    {id:'demo-travel',name:'Travel Mastercard (sample)',balance:600,startBalance:700,limit:3000,apr:19.99,min:25,payment:50,target:12,step:15,notes:'',dueDay:5,autopay:false,lastPaid:''}
   ];
+  const fri=(()=>{const x=new Date();x.setDate(x.getDate()+((5-x.getDay()+7)%7||7));return ymOf(x)+'-'+pad2(x.getDate())})();
+  const bill=(id,name,amount,category,dueDay,extra)=>({id,name,amount,category,frequency:'monthly',dueDay,nextDue:'',autopay:false,variable:false,card:'',lastPaid:'',notes:'',...extra});
+  d.bills=[
+    bill('demo-rent','Rent (sample)',1450,'Housing',3,{lastPaid:ym(0)+'-01'}),
+    bill('demo-trash','Trash pickup (sample)',35,'Utilities',15),
+    bill('demo-power','Electric (sample)',120,'Utilities',9,{variable:true}),
+    bill('demo-phone','Phone (sample)',65,'Phone & internet',20,{autopay:true,card:'demo-visa'}),
+    bill('demo-car','Car insurance (sample)',390,'Insurance',0,{frequency:'quarterly',nextDue:(()=>{const x=new Date();x.setDate(x.getDate()+18);return ymOf(x)+'-'+pad2(x.getDate())})()})
+  ];
+  d.income=[{id:'demo-pay',name:'Paycheck (sample)',amount:2100,category:'Salary',frequency:'biweekly',dueDay:0,nextDue:fri,notes:''}];
   for(let k=3;k>=0;k--){
     const m=ym(k);
     d.transactions.push(
@@ -719,7 +887,7 @@ function loadLocal(){
   return emptyData();
 }
 function persistLocal(){if(!prefs.remember)return;try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){toast('Browser storage is full or blocked. Use Save to keep a copy.')}}
-function commit(msg){data.updatedAt=Date.now();data.meta.changes=(data.meta.changes||0)+1;if(!data.meta.dirtySince)data.meta.dirtySince=Date.now();persistLocal();scheduleFileWrite();render();if(msg)toast(msg)}
+function commit(msg){data.updatedAt=Date.now();data.revision=(data.revision||0)+1;data.updatedBy='app';data.meta.changes=(data.meta.changes||0)+1;if(!data.meta.dirtySince)data.meta.dirtySince=Date.now();persistLocal();scheduleFileWrite();render();if(msg)toast(msg)}
 function markBackedUp(){data.meta.lastBackupAt=data.updatedAt;clearChangeCount();persistLocal();renderStatus()}
 function replaceData(d,msg){data=d;data.meta.lastBackupAt=data.updatedAt;clearChangeCount();persistLocal();scheduleFileWrite();render();if(msg)toast(msg)}
 
@@ -801,16 +969,16 @@ function findJson(text){
 function isImportObj(o){
   if(!o||typeof o!=='object')return false;
   if(o.fintrack==='import')return true;
+  if(o.fintrack==='profile'||o.app==='FinTrack')return false;
   const hasC=Array.isArray(o.cards),hasT=Array.isArray(o.transactions);
-  if(!hasC&&!hasT)return false;
-  if(o.app==='FinTrack')return false;
+  if(!hasC&&!hasT)return Array.isArray(o.bills)||Array.isArray(o.income);
   return !(hasC&&hasT&&o.cards.every(c=>c&&c.id!=null&&c.id!==''));
 }
 // "$3,400" -> 3400, "24.99%" -> 24.99. Returns NaN when there's no number.
 const toNum=v=>{if(typeof v==='number')return v;const m=String(v??'').replace(/[,\s]/g,'').match(/-?\d+(\.\d+)?/);return m?Number(m[0]):NaN};
 const money2=n=>Math.round(n*100)/100;
 function readImport(o){
-  const out={currency:null,cards:[],transactions:[]};
+  const out={currency:null,cards:[],transactions:[],bills:[],income:[]};
   const cur=String(o.currency||'').trim().toUpperCase();if(CURRENCIES.includes(cur))out.currency=cur;
   const opt=v=>{v=toNum(v);return Number.isFinite(v)&&v>0?money2(v):null};
   (Array.isArray(o.cards)?o.cards:[]).slice(0,200).forEach(c=>{
@@ -830,12 +998,28 @@ function readImport(o){
     if(!date){date=dateNow();guessed=true}
     out.transactions.push({date,type,amount:money2(Math.abs(raw)),category:str(t.category,40).trim()||(type==='income'?'Income':'Other'),description:str(t.description,120).trim(),card:str(t.card??t.account,60).trim(),guessed});
   });
+  // Bills and income: matched to existing ones by id, then by name. Missing fields mean "unchanged".
+  const rec=(x,kind)=>{
+    if(!x||typeof x!=='object')return null;
+    const name=str(x.name,60).trim();if(!name&&!x.id)return null;
+    const fr=String(x.frequency||'').toLowerCase().replace(/[\s-]/g,'');
+    const freq=FREQS.includes(fr)?fr:{annual:'yearly',annually:'yearly',fortnightly:'biweekly',everyotherweek:'biweekly'}[fr]||null;
+    const r={id:/^[A-Za-z0-9_-]{1,40}$/.test(String(x.id??''))?String(x.id):'',name,amount:opt(x.amount),frequency:freq,dueDay:dayNum(toNum(x.dueDay))||null,nextDue:validDate(x.nextDue)||null,category:str(x.category,40).trim(),notes:str(x.notes,300).trim()};
+    if(kind==='bill'){r.autopay=typeof x.autopay==='boolean'?x.autopay:null;r.variable=typeof x.variable==='boolean'?x.variable:null;r.card=str(x.card,60).trim();r.lastPaid=validDate(x.lastPaid)||null}
+    return r;
+  };
+  (Array.isArray(o.bills)?o.bills:[]).slice(0,300).forEach(x=>{const r=rec(x,'bill');if(r)out.bills.push(r)});
+  (Array.isArray(o.income)?o.income:[]).slice(0,100).forEach(x=>{const r=rec(x,'income');if(r)out.income.push(r)});
   return out;
 }
-const nameKey=s=>String(s||'').trim().toLowerCase();
+const findRec=(list,r)=>(r.id&&list.find(x=>x.id===r.id))||list.find(x=>nameKey(x.name)===nameKey(r.name));
+const schedText=x=>{const f=x.frequency||'monthly';if(f==='monthly'&&x.dueDay)return 'Monthly · due the '+ordinal(x.dueDay);if(x.nextDue)return FREQ_LABEL[f]+' · '+(f==='once'?'':'next ')+fmtDate(x.nextDue);return FREQ_LABEL[f]};
+const ordinal=n=>n+(n%100>=11&&n%100<=13?'th':['th','st','nd','rd'][n%10]||'th');
 let pendingImport=null;
 function openImport(imp){
-  if(!imp.cards.length&&!imp.transactions.length){toast('That import has no cards or transactions in it.');return}
+  if(!imp.cards.length&&!imp.transactions.length&&!imp.bills.length&&!imp.income.length){toast('That import has nothing in it.');return}
+  $('importTitle').textContent='Check your import';$('importLead').textContent='This was prepared from what you told an AI assistant. Nothing has changed yet: check the numbers, then import.';
+  $('profileLoad').classList.add('hidden');$('importMerge').classList.remove('hidden');
   pendingImport=imp;
   const cur=imp.currency||data.settings.currency,m=n=>esc(money(n,cur));
   const known=new Set([...data.cards,...imp.cards].map(c=>nameKey(c.name)));
@@ -857,6 +1041,13 @@ function openImport(imp){
     const lost=[...new Set(tx.filter(t=>t.card&&!known.has(nameKey(t.card))).map(t=>t.card))];
     if(lost.length)warn.push(`No card called ${esc(lost.join(', '))}, so ${lost.length===1?'its':'their'} transactions are kept without a card.`);
   }
+  [['bills','bill',data.bills],['income','income',data.income]].forEach(([key,label,list])=>{
+    const rs=imp[key];if(!rs.length)return;
+    h+=`<h3 style="margin-top:12px">${rs.length} ${label==='bill'?'bill'+(rs.length===1?'':'s'):'income source'+(rs.length===1?'':'s')}</h3><div class="table-wrap"><table><thead><tr><th>Name</th><th>Amount</th><th>When</th><th></th></tr></thead><tbody>`+
+      rs.map(r=>{const ex=findRec(list,r),merged={...(ex||{frequency:'monthly'}),...Object.fromEntries(Object.entries(r).filter(([,v])=>v!=null&&v!==''))};return `<tr><td>${esc(r.name||(ex&&ex.name)||r.id)}</td><td class="num">${r.amount!=null?m(r.amount):ex?'<span class="muted">unchanged</span>':'<span class="amber">not given</span>'}</td><td>${esc(schedText(merged))}</td><td>${ex?'<span class="pill">updates yours</span>':'<span class="pill">new</span>'}</td></tr>`}).join('')+'</tbody></table></div>';
+    const noDate=rs.filter(r=>!findRec(list,r)&&!r.dueDay&&!r.nextDue).map(r=>r.name);
+    if(noDate.length)warn.push(`No due date for ${esc(noDate.join(', '))}, so ${noDate.length===1?'it':'they'} won't show in “Coming up” until you add one.`);
+  });
   if(imp.currency&&imp.currency!==data.settings.currency&&hasContent())warn.push(`Your currency will change from ${esc(data.settings.currency)} to ${esc(imp.currency)}.`);
   if(warn.length)h+=`<div class="callout warning" style="margin-top:12px">${warn.map(w=>'<div>'+w+'</div>').join('')}</div>`;
   $('importBody').innerHTML=h;
@@ -889,14 +1080,64 @@ function applyImport(mode){
     const tx={id:uid(),date:t.date,type:t.type,amount:t.amount,category:t.category,description:t.description,account:card?card.id:''};
     const s=sig(tx);if(seen.has(s)){txSkipped++;return}seen.add(s);d.transactions.push(tx);txAdded++;
   });
+  let recAdded=0,recUpdated=0;
+  [['bills',d.bills],['income',d.income]].forEach(([key,list])=>imp[key].forEach(r=>{
+    const ex=findRec(list,r);
+    const fields=Object.fromEntries(Object.entries(r).filter(([k,v])=>v!=null&&v!==''&&k!=='id'));
+    if(fields.card!=null){const c=d.cards.find(x=>x.id===fields.card||nameKey(x.name)===nameKey(fields.card));fields.card=c?c.id:''}
+    if(fields.frequency&&fields.frequency!=='monthly'&&fields.dueDay&&!fields.nextDue)delete fields.dueDay;
+    if(ex){Object.assign(ex,fields);if(fields.frequency==='monthly'&&fields.dueDay)ex.nextDue='';recUpdated++}
+    else{const used=new Set([...d.cards,...d.bills,...d.income].map(x=>x.id));list.push({id:r.id&&!used.has(r.id)?r.id:uid(),name:r.name||'Item',amount:0,category:key==='bills'?'Bills':'Income',frequency:'monthly',dueDay:0,nextDue:'',notes:'',...(key==='bills'?{autopay:false,variable:false,card:'',lastPaid:''}:{}),...fields});recAdded++}
+  }));
   const parts=[];
+  if(recAdded)parts.push(recAdded+' bill/income item'+(recAdded===1?'':'s')+' added');
+  if(recUpdated)parts.push(recUpdated+' bill/income item'+(recUpdated===1?'':'s')+' updated');
   if(added)parts.push(added+' card'+(added===1?'':'s')+' added');
   if(updated)parts.push(updated+' card'+(updated===1?'':'s')+' updated');
   if(txAdded)parts.push(txAdded+' transaction'+(txAdded===1?'':'s'));
   if(txSkipped)parts.push(txSkipped+' duplicate'+(txSkipped===1?'':'s')+' skipped');
   closeDialogs();
   withUndo('Imported: '+(parts.join(', ')||'nothing new')+'. Tap Save to keep a backup.',()=>{data=d});
-  setPage(imp.cards.length||!imp.transactions.length?'dashboard':'transactions');
+  setPage(imp.cards.length?'dashboard':(imp.bills.length||imp.income.length)?'bills':imp.transactions.length?'transactions':'dashboard');
+}
+
+// A whole FinTrack file replaces what's on screen, after a review that shows what an assistant changed.
+let pendingProfile=null;
+function openProfile(d){
+  pendingProfile=d;
+  const m=n=>esc(money(n,d.settings.currency)),cnt=(n,w)=>n+' '+w+(n===1?'':'s');
+  const newer=data.revision||0,warn=[];
+  const debt=sum(d.cards.map(c=>c.balance));
+  let h=`<div class="cashsum"><div><span class="tiny">Cards</span><b>${d.cards.length}</b><span class="tiny">${m(debt)} owed</span></div><div><span class="tiny">Bills</span><b>${d.bills.length}</b><span class="tiny">${m(sum(d.bills.map(b=>b.amount*PER_MONTH[b.frequency])))}/mo</span></div><div><span class="tiny">Income</span><b>${d.income.length}</b><span class="tiny">${m(sum(d.income.map(i=>i.amount*PER_MONTH[i.frequency])))}/mo</span></div></div>`;
+  h+=`<div class="small">Revision <b>${d.revision}</b>${d.updatedAt?' · last changed '+esc(new Date(d.updatedAt).toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'})):''}${d.updatedBy==='assistant'?' by an AI assistant':''} · ${cnt(d.transactions.length,'transaction')}</div>`;
+  const known=new Set(data.log.map(e=>e.rev+'|'+e.summary)),fresh=d.log.filter(e=>!known.has(e.rev+'|'+e.summary)).slice(-8);
+  if(fresh.length)h+=`<h3 style="margin-top:12px">What changed</h3><div class="loglist">${fresh.map(e=>`<div><b>#${e.rev}</b><span>${esc(e.summary)}${e.by==='assistant'?' <span class="muted">· assistant</span>':''}</span></div>`).join('')}</div>`;
+  if(hasContent()){
+    const diff=[];
+    // Compare field by field (key order doesn't matter; a missing field equals an empty one).
+    const same=(x,y)=>[...new Set([...Object.keys(x),...Object.keys(y)])].every(k=>(x[k]??'')===(y[k]??'')||(!x[k]&&!y[k]));
+    const cmp=(label,a,b,key=x=>x.id)=>{const A=new Map(a.map(x=>[key(x),x])),B=new Map(b.map(x=>[key(x),x]));const add=[...B.keys()].filter(k=>!A.has(k)).length,rem=[...A.keys()].filter(k=>!B.has(k)).length;const chg=[...B.keys()].filter(k=>A.has(k)&&!same(A.get(k),B.get(k))).length;if(add)diff.push(`${add} ${label} added`);if(chg)diff.push(`${chg} ${label} changed`);if(rem)diff.push(`${rem} ${label} removed`)};
+    cmp('card',data.cards,d.cards);cmp('bill',data.bills,d.bills);cmp('income item',data.income,d.income);cmp('transaction',data.transactions,d.transactions);cmp('card payment',data.history,d.history);
+    h+=`<div class="small" style="margin-top:10px">Compared with what's on this device: ${diff.length?esc(diff.join(', ')):'no differences'}.</div>`;
+    if(d.revision<newer)warn.push(`This file (revision ${d.revision}) is older than what's on this device (revision ${newer}). Loading it replaces your newer changes.`);
+  }
+  const cardsNoApr=d.cards.filter(c=>c.balance>0&&!c.apr).map(c=>c.name);
+  if(cardsNoApr.length)warn.push(`No APR for ${esc(cardsNoApr.join(', '))}: payoff dates will look better than they really are.`);
+  const undated=[...d.bills,...d.income].filter(x=>!schedOf(x)).map(x=>x.name);
+  if(undated.length)warn.push(`No due date for ${esc(undated.join(', '))}.`);
+  if(warn.length)h+=`<div class="callout warning" style="margin-top:12px">${warn.map(w=>'<div>'+w+'</div>').join('')}</div>`;
+  $('importTitle').textContent='Load your FinTrack file';
+  $('importLead').textContent=hasContent()?'Nothing has changed yet. Loading replaces what this device shows with this file (you can undo right after).':'Nothing has changed yet. Check it over, then load it.';
+  $('importBody').innerHTML=h;
+  $('importMerge').classList.add('hidden');$('importReplace').classList.add('hidden');$('profileLoad').classList.remove('hidden');
+  closeDialogs();showDlg('importDlg');
+}
+function applyProfile(){
+  const d=pendingProfile;if(!d)return;pendingProfile=null;closeDialogs();
+  const snap=JSON.stringify(data),last=d.log[d.log.length-1];
+  replaceData(d);
+  toast('Loaded revision '+d.revision+(last&&d.updatedBy==='assistant'?': '+last.summary:'.'),()=>{data=JSON.parse(snap);persistLocal();scheduleFileWrite();render();toast('Restored.')});
+  setPage('dashboard');
 }
 // #import=<percent-encoded JSON>, or base64url JSON. Decodes each %XX run on its own so a stray "%" can't break it.
 function importFromHash(){
@@ -914,7 +1155,7 @@ function importFromHash(){
 function scheduleFileWrite(){if(!fileHandle)return;clearTimeout(fileTimer);fileTimer=setTimeout(writeFile,500)}
 async function writeFile(){
   if(!fileHandle)return;
-  try{const w=await fileHandle.createWritable();await w.write(JSON.stringify(exportObj(),null,2));await w.close();fileState='ok';data.meta.lastBackupAt=data.updatedAt;clearChangeCount();persistLocal()}
+  try{const w=await fileHandle.createWritable();await w.write(profileText());await w.close();fileState='ok';data.meta.lastBackupAt=data.updatedAt;clearChangeCount();persistLocal()}
   catch(e){fileState='error'}
   renderStatus();renderFsPanel();
 }
@@ -922,7 +1163,7 @@ const fileTypes=[{description:'FinTrack data',accept:{'application/json':['.json
 async function linkNewFile(){
   if(!fsSupported)return toast('Auto-save files need Chrome or Edge on a computer. Use the save code instead.');
   try{
-    const h=await window.showSaveFilePicker({suggestedName:'fintrack-data.json',types:fileTypes});
+    const h=await window.showSaveFilePicker({suggestedName:'fintrack.json',types:fileTypes});
     fileHandle=h;pendingHandle=null;if(prefs.remember)await idbSet('handle',h);
     await writeFile();toast('Linked. Every change now auto-saves to '+h.name);
   }catch(e){if(e&&e.name!=='AbortError')toast('Could not link that file.')}
@@ -943,8 +1184,11 @@ async function syncFromFile(){
     const text=(await (await fileHandle.getFile()).text()).trim();
     if(!text){await writeFile();return}
     const d=await readSaveText(text);
-    if(d.updatedAt>data.updatedAt){replaceData(d,'Loaded latest data from '+fileHandle.name);fileState='ok'}
-    else if(d.updatedAt<data.updatedAt)await writeFile();
+    // revision decides which is newer (an assistant may not know the exact time); updatedAt breaks ties.
+    const fr=d.revision||0,lr=data.revision||0,newer=fr>lr||(fr===lr&&d.updatedAt>data.updatedAt);
+    const older=fr<lr||(fr===lr&&d.updatedAt<data.updatedAt);
+    if(newer){const last=d.log[d.log.length-1];replaceData(d,'Updated from '+fileHandle.name+(last&&d.updatedBy==='assistant'?': '+last.summary:''));fileState='ok'}
+    else if(older)await writeFile();
     else{fileState='ok';data.meta.lastBackupAt=data.updatedAt;clearChangeCount()}
   }catch(e){fileState='error'}
   renderStatus();renderFsPanel();
@@ -960,6 +1204,70 @@ async function initFile(){
   const h=await idbGet('handle');if(!h)return;
   try{if(await h.queryPermission({mode:'readwrite'})==='granted'){fileHandle=h;await syncFromFile()}else pendingHandle=h}catch(e){pendingHandle=h}
   renderStatus();renderFsPanel();
+}
+
+/* ---------- schedules: bills, income and card due dates ---------- */
+// Same rules as skill/fintrack/scripts/fintrack.py so the dashboard and an assistant agree on what's due.
+// Dates are 'YYYY-MM-DD' strings; the arithmetic runs in UTC so daylight saving can't shift a day.
+const PER_MONTH={weekly:52/12,biweekly:26/12,monthly:1,quarterly:1/3,yearly:1/12,once:0};
+const LEAD={weekly:3,biweekly:7,monthly:15,quarterly:45,yearly:182,once:36500}; // a payment this many days early still counts
+const dUTC=s=>{const [y,m,d]=s.split('-').map(Number);return Date.UTC(y,m-1,d)};
+const sUTC=t=>new Date(t).toISOString().slice(0,10);
+const addDays=(s,n)=>sUTC(dUTC(s)+n*DAY);
+const daysBetween=(a,b)=>Math.round((dUTC(b)-dUTC(a))/DAY);
+const ymdC=(y,m0,d)=>{y+=Math.floor(m0/12);m0=((m0%12)+12)%12;return sUTC(Date.UTC(y,m0,Math.min(d,new Date(Date.UTC(y,m0+1,0)).getUTCDate())))};
+function schedOf(x){
+  const f=FREQS.includes(x.frequency)?x.frequency:'monthly',anchor=validDate(x.nextDue)||'';let day=Math.min(31,dayNum(x.dueDay));
+  if(f==='monthly'){if(!day&&anchor)day=+anchor.slice(8);return day?{f,day}:null}
+  return anchor?{f,anchor}:null;
+}
+function onOrAfter(sc,x){
+  const [xy,xm]=x.split('-').map(Number);
+  if(sc.f==='monthly'){const c=ymdC(xy,xm-1,sc.day);return c>=x?c:ymdC(xy,xm,sc.day)}
+  if(sc.f==='once')return sc.anchor>=x?sc.anchor:null;
+  if(sc.f==='weekly'||sc.f==='biweekly'){const st=sc.f==='weekly'?7:14;return addDays(sc.anchor,Math.ceil(daysBetween(sc.anchor,x)/st)*st)}
+  const st=sc.f==='quarterly'?3:12,[ay,am,ad]=sc.anchor.split('-').map(Number);
+  const k=Math.floor(((xy-ay)*12+(xm-am))/st)*st,c=ymdC(ay,am-1+k,ad);
+  return c>=x?c:ymdC(ay,am-1+k+st,ad);
+}
+// {date, days, status: 'due'|'overdue'|'auto'|'done', paid} for the next time this needs paying.
+function dueState(x,lastPaid,autopay,today){
+  const sc=schedOf(x);if(!sc)return null;
+  const T=today||dateNow();
+  if(autopay||!lastPaid){
+    if(sc.f==='once'&&!autopay&&sc.anchor<T)return {date:sc.anchor,days:daysBetween(T,sc.anchor),status:'overdue',sc};
+    const n=onOrAfter(sc,T);return n?{date:n,days:daysBetween(T,n),status:autopay?'auto':'due',sc}:{status:'done',sc};
+  }
+  const covered=onOrAfter(sc,addDays(lastPaid,-LEAD[sc.f])),n=covered?onOrAfter(sc,addDays(covered,1)):null;
+  if(!n)return {status:'done',paid:lastPaid,sc};
+  const days=daysBetween(T,n);
+  return {date:n,days,status:days<0?'overdue':'due',paid:lastPaid,sc};
+}
+const cardLastPaid=c=>data.history.filter(h=>h.cardId===c.id&&h.kind==='payment').reduce((m,h)=>h.date>m?h.date:m,c.lastPaid||'');
+const cardDue=c=>c.dueDay&&num(c.balance)?dueState({frequency:'monthly',dueDay:c.dueDay},cardLastPaid(c),c.autopay):null;
+const billDue=b=>dueState(b,b.lastPaid,b.autopay);
+// Everything due in the next `days` days (plus anything overdue), soonest first.
+function upcoming(days){
+  const T=dateNow(),end=addDays(T,days),out=[];
+  data.bills.forEach(b=>{
+    const st=billDue(b);if(!st||st.status==='done')return;
+    let d=st.date,n=0;
+    while(d&&d<=end&&n<10){out.push({date:d,kind:'bill',ref:b,name:b.name,amount:b.amount,approx:b.variable,status:n?(b.autopay?'auto':'due'):st.status});d=onOrAfter(st.sc,addDays(d,1));n++}
+  });
+  data.cards.forEach(c=>{const st=cardDue(c);if(st&&st.status!=='done'&&st.date<=end)out.push({date:st.date,kind:'card',ref:c,name:c.name,amount:num(c.payment)||num(c.min),status:st.status})});
+  data.income.forEach(i=>{const sc=schedOf(i);let d=sc?onOrAfter(sc,T):null,n=0;while(d&&d<=end&&n<10){out.push({date:d,kind:'income',ref:i,name:i.name,amount:i.amount,status:'income'});d=onOrAfter(sc,addDays(d,1));n++}});
+  return out.sort((a,b)=>a.date.localeCompare(b.date)||(a.kind==='income')-(b.kind==='income'));
+}
+const monthlyBills=()=>sum(data.bills.map(b=>num(b.amount)*PER_MONTH[b.frequency]));
+const monthlyIncome=()=>sum(data.income.map(i=>num(i.amount)*PER_MONTH[i.frequency]));
+function dueLabel(st,kind){
+  if(!st)return {txt:'No due date',cls:'muted'};
+  if(st.status==='done')return {txt:'Paid',cls:'green'};
+  const d=st.days,when=d===0?'today':d===1?'tomorrow':d<0?'':'in '+d+' days';
+  if(st.status==='overdue')return {txt:(-d)+' day'+(d===-1?'':'s')+' overdue',cls:'red',pill:'bad'};
+  if(st.status==='auto')return {txt:'Autopay '+when,cls:'muted'};
+  if(kind==='income')return {txt:when,cls:'green'};
+  return {txt:'Due '+when,cls:d<=3?'amber':'',pill:d<=3?'warn':''};
 }
 
 /* ---------- market ticker ---------- */
@@ -1075,7 +1383,7 @@ function svgLines(series,opts={}){
 const futureLabels=n=>Array.from({length:n},(_,i)=>futureDate(i).toLocaleDateString(undefined,{month:'short',year:'2-digit'}));
 
 /* ---------- rendering ---------- */
-const TITLES={dashboard:['Your money, at a glance',''],cards:['Credit cards','Balances, payoff dates and payment history.'],plan:['Payoff plan','See how fast you could be debt-free, and which card to pay first.'],transactions:['Transactions','Money in and money out, by month.'],reports:['Reports','Cash flow and spending over time.'],settings:['Save & data','Backups, auto-save files and privacy.']};
+const TITLES={dashboard:['Your money, at a glance',''],cards:['Credit cards','Balances, payoff dates and payment history.'],bills:['Bills & due dates','Recurring bills, income, and what’s due next.'],plan:['Payoff plan','See how fast you could be debt-free, and which card to pay first.'],transactions:['Transactions','Money in and money out, by month.'],reports:['Reports','Cash flow and spending over time.'],settings:['Save & data','Backups, auto-save files and privacy.']};
 const MONTH_PAGES=new Set(['dashboard','transactions','reports']);
 function setPage(p){
   page=p;
@@ -1089,8 +1397,49 @@ function setPage(p){
 function render(){
   $('welcome').classList.toggle('hidden',hasContent());
   $('hero').classList.toggle('hidden',!hasContent());
-  fillCardSelects();renderStatus();renderHero();renderCardList();renderDebtChart();renderCashChart();renderMonthSummary();
-  renderCardsPage();renderPlan();renderTransactions();renderReports();renderSettings();
+  $('dueRow').classList.toggle('hidden',!hasContent());
+  fillCardSelects();renderStatus();renderHero();renderUpcoming();renderBudget();renderCardList();renderDebtChart();renderCashChart();renderMonthSummary();
+  renderCardsPage();renderBillsPage();renderPlan();renderTransactions();renderReports();renderSettings();
+}
+// One row in a "what's due" list: date tile, name, amount and status.
+function dueRow(x){
+  const d=new Date(x.date+'T12:00:00'),lab=dueLabel({date:x.date,days:daysBetween(dateNow(),x.date),status:x.status},x.kind);
+  const kind=x.kind==='card'?'Card payment':x.kind==='income'?'Income':x.ref.category||'Bill';
+  const act=x.kind==='card'?`data-goto-card="${esc(x.ref.id)}"`:`data-edit-rec="${x.kind}:${esc(x.ref.id)}"`;
+  return `<button class="duerow" type="button" ${act}><span class="dd${x.status==='overdue'?' over':''}"><span>${esc(d.toLocaleDateString(undefined,{month:'short'}))}</span><b>${d.getDate()}</b></span><span class="nm">${esc(x.name)}</span><span class="amt ${x.kind==='income'?'green':''}">${x.kind==='income'?'+':''}${x.approx?'~':''}${money(x.amount)}</span><span class="meta">${esc(kind)}</span><span class="st ${lab.cls}">${esc(lab.txt)}</span></button>`;
+}
+function renderUpcoming(){
+  const items=upcoming(30);
+  if(!items.length){$('upcoming').innerHTML=`<div class="empty">${data.bills.length||data.income.length||data.cards.some(c=>c.dueDay)?'Nothing due in the next 30 days.':'Add your bills and card due dates to see what’s coming up.'}<br><button class="primary" data-act-hero="addbill" type="button">＋ Add a bill</button></div>`;return}
+  const shown=items.slice(0,7),owe=sum(items.filter(x=>x.kind!=='income'&&x.status!=='auto'&&x.date<=addDays(dateNow(),14)).map(x=>num(x.amount)));
+  const over=items.filter(x=>x.status==='overdue').length;
+  $('upcoming').innerHTML=`<div class="tiny" style="margin-bottom:6px">${over?`<b class="red">${over} overdue</b> · `:''}${money(owe)} to pay yourself in the next 2 weeks (not counting autopay)</div><div class="duelist">${shown.map(dueRow).join('')}</div>${items.length>shown.length?`<div class="tiny" style="margin-top:6px">+ ${items.length-shown.length} more in the next 30 days</div>`:''}`;
+}
+function renderBudget(){
+  const inc=monthlyIncome(),bills=monthlyBills(),cards=allPay(),left=inc-bills-cards,t=totals(activeMonth());
+  if(!data.income.length&&!data.bills.length){$('budget').innerHTML=`<div class="empty">Add your income and regular bills to see what's left each month after everything's paid.<br><button class="primary" data-act-hero="addincome" type="button">＋ Add income</button></div>`;return}
+  $('budget').innerHTML=`<div class="budget">
+    <div class="summary-row"><span>Income</span><b class="green">${money(inc)}</b></div>
+    <div class="summary-row"><span>Bills <span class="tiny">(${data.bills.length})</span></span><b>−${money(bills)}</b></div>
+    <div class="summary-row"><span>Card payments <span class="tiny">(${data.cards.filter(c=>c.payment).length})</span></span><b>−${money(cards)}</b></div>
+    <div class="summary-row total"><span><b style="font-size:14px">Left over each month</b><br><span class="tiny">for groceries, gas, fun, savings or extra debt payments</span></span><b class="${left<0?'red':'green'}">${money(left)}</b></div>
+  </div>${!data.income.length?'<div class="small amber" style="margin-top:8px">No income added yet, so this only shows what goes out.</div>':''}${left<0&&data.income.length?'<div class="callout warning" style="margin-top:10px">Your bills and card payments add up to more than your income.</div>':''}<div class="tiny" style="margin-top:8px">Weekly and yearly amounts are averaged per month.${t.income||t.expenses?' Actual this month so far: '+money(t.income)+' in, '+money(t.expenses)+' out.':''}</div>`;
+}
+function billRow(b,kind){
+  const st=kind==='bill'?billDue(b):(()=>{const sc=schedOf(b);const n=sc?onOrAfter(sc,dateNow()):null;return n?{date:n,days:daysBetween(dateNow(),n),status:'due'}:null})();
+  const lab=dueLabel(st,kind);
+  const meta=[schedText(b),b.category,kind==='bill'&&b.autopay?'Autopay':'',kind==='bill'&&b.card?'on '+cardName(b.card):'',kind==='bill'&&b.lastPaid&&st&&st.status!=='overdue'?'paid '+fmtDate(b.lastPaid):''].filter(Boolean).join(' · ');
+  const showPay=kind==='bill'&&!b.autopay&&st&&st.status!=='done'&&st.days<=20;
+  return `<div class="billrow"><button class="info" type="button" data-edit-rec="${kind}:${esc(b.id)}"><span class="nm">${esc(b.name)}</span><span class="meta">${esc(meta)}</span></button><div class="right"><span class="amt ${kind==='income'?'green':''}">${b.variable?'~':''}${money(b.amount)}</span><span class="tiny ${lab.cls}">${esc(st&&st.date?(lab.txt+' · '+fmtDate(st.date)):lab.txt)}</span></div>${kind==='bill'?`<button class="pay ${showPay?(st.status==='overdue'?'primary':''):'ghost'}" type="button" data-pay-bill="${esc(b.id)}"${showPay?'':' title="Mark paid early"'}>${showPay?'Mark paid':'Paid?'}</button>`:'<span></span>'}</div>`;
+}
+function renderBillsPage(){
+  const inc=monthlyIncome(),bills=monthlyBills(),cards=allPay();
+  $('billsSummary').innerHTML=`<div><span class="tiny">Income / month</span><b class="green">${money(inc)}</b></div><div><span class="tiny">Bills / month</span><b>${money(bills)}</b></div><div><span class="tiny">Card payments / month</span><b>${money(cards)}</b></div><div><span class="tiny">Left over</span><b class="${inc-bills-cards<0?'red':''}">${money(inc-bills-cards)}</b></div>`;
+  const order=(a,b)=>{const x=billDue(a),y=billDue(b);return (x&&x.date||'9999').localeCompare(y&&y.date||'9999')};
+  $('billsList').innerHTML=data.bills.length?[...data.bills].sort(order).map(b=>billRow(b,'bill')).join(''):'<div class="empty">No bills yet. Add rent, utilities, phone, insurance, subscriptions: anything that repeats.<br><button class="primary" data-act-hero="addbill" type="button">＋ Add a bill</button></div>';
+  $('incomeList').innerHTML=data.income.length?data.income.map(i=>billRow(i,'income')).join(''):'<div class="empty">Add your paycheck so FinTrack can show what’s left each month.<br><button data-act-hero="addincome" type="button">＋ Add income</button></div>';
+  const items=upcoming(30);
+  $('billsUpcoming').innerHTML=items.length?`<div class="duelist">${items.slice(0,12).map(dueRow).join('')}</div>`:'<div class="empty">Nothing scheduled in the next 30 days.</div>';
 }
 function renderStatus(){
   const el=$('saveStatus');let cls,text,detail='';
@@ -1131,7 +1480,7 @@ function renderHero(){
 }
 function renderCardList(){
   if(!data.cards.length){$('cardList').innerHTML='<div class="empty">No cards yet.<br><button class="primary" data-act-hero="addcard" type="button">＋ Add your first card</button></div>';return}
-  $('cardList').innerHTML=`<div class="cardrows">${data.cards.map(c=>{const u=util(c),st=cardStatus(c);return `<button class="cardrow" type="button" data-goto-card="${esc(c.id)}"><span class="nm">${esc(c.name)}</span><span class="bal">${money(c.balance)}</span><span class="meta">${num(c.apr).toFixed(2)}% APR · ${money(c.payment)}/mo${c.limit?' · '+u.toFixed(0)+'% used':''}</span><span class="when ${st.cls}">${esc(st.txt)}</span>${c.limit?`<span class="progress"><span style="width:${Math.min(100,u)}%;background:${utilColor(u)}"></span></span>`:''}</button>`}).join('')}</div>`;
+  $('cardList').innerHTML=`<div class="cardrows">${data.cards.map(c=>{const u=util(c),st=cardStatus(c),due=cardDue(c),dl=due&&due.status!=='done'?dueLabel(due,'card'):null;return `<button class="cardrow" type="button" data-goto-card="${esc(c.id)}"><span class="nm">${esc(c.name)}</span><span class="bal">${money(c.balance)}</span><span class="meta">${num(c.apr).toFixed(2)}% APR · ${money(c.payment)}/mo${c.limit?' · '+u.toFixed(0)+'% used':''}${dl?` · <span class="${dl.cls}">${esc(dl.txt)}</span>`:''}</span><span class="when ${st.cls}">${esc(st.txt)}</span>${c.limit?`<span class="progress"><span style="width:${Math.min(100,u)}%;background:${utilColor(u)}"></span></span>`:''}</button>`}).join('')}</div>`;
 }
 function renderDebtChart(){
   if(!data.cards.length||!totalDebt()){$('debtChart').innerHTML='<div class="empty">'+(data.cards.length?'No card balances. You’re debt-free 🎉':'Add a card to project your debt.')+'</div>';return}
@@ -1172,6 +1521,7 @@ function renderCardsPage(){
     ${c.limit?`<div class="progress" title="Credit used"><span style="width:${Math.min(100,u)}%;background:${utilColor(u)}"></span></div>`:''}
     ${start>0&&down>0?`<div class="tiny">Paid down <b class="green">${money(down)}</b> of ${money(start)} (${pct.toFixed(0)}%)</div>`:''}
     <div class="cc-facts"><div><span>APR</span><b>${num(c.apr).toFixed(2)}%</b></div><div><span>YOU PAY</span><b>${money(c.payment)}/mo</b></div><div><span>PAID OFF</span><b class="${st.cls}">${esc(p.ok&&num(c.balance)?p.date:st.txt)}</b></div></div>
+    ${(()=>{const due=cardDue(c);if(!due||due.status==='done')return c.dueDay?'':'';const dl=dueLabel(due,'card');return `<div class="tiny" style="margin:-4px 0 10px">Payment due ${esc(fmtDate(due.date))}${c.autopay?' · autopay on':''} · <span class="${dl.cls}">${esc(dl.txt)}</span></div>`})()}
     ${c.notes?`<div class="cc-note">${esc(c.notes)}</div>`:''}
     <div class="cc-actions"><button class="primary" data-act="pay" data-id="${id}" type="button">＋ Log payment</button><details class="menu"><summary aria-label="More actions for ${esc(c.name)}">···</summary><div class="menu-pop"><button data-act="charge" data-id="${id}" type="button">Add charge</button><button data-act="edit" data-id="${id}" type="button">Edit card</button><button class="danger" data-act="del" data-id="${id}" type="button">Delete card</button></div></details></div>
     <details class="more" data-keep="plan:${id}"${openHistory.has('plan:'+c.id)?' open':''}><summary>Details &amp; what-if</summary>
@@ -1231,10 +1581,48 @@ function renderFsPanel(){
 }
 function renderSettings(){
   $('prefRemember').checked=prefs.remember;$('prefWarn').checked=prefs.warnClose;$('prefTicker').checked=prefs.ticker;$('currency').value=data.settings.currency;$('theme').value=prefs.theme;renderFsPanel();
+  const log=data.log.slice(-5).reverse();
+  $('fileInfo').innerHTML=hasContent()?`<div class="small">Revision <b>${data.revision||0}</b>${data.updatedAt?' · last change '+esc(ago(data.updatedAt)):''}${data.updatedBy==='assistant'?' (by an AI assistant)':''} · ${data.cards.length} card${data.cards.length===1?'':'s'}, ${data.bills.length} bill${data.bills.length===1?'':'s'}, ${data.income.length} income, ${data.transactions.length} transaction${data.transactions.length===1?'':'s'}</div>${log.length?`<div class="loglist">${log.map(e=>`<div><b>#${e.rev}</b><span>${esc(e.summary)}</span></div>`).join('')}</div>`:''}`:'<div class="small muted">Nothing here yet. Add something, load a file, or start from the sample data.</div>';
 }
 function fillCardSelects(){
   const opts=data.cards.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('');
   const txold=$('txAccount').value;$('txAccount').innerHTML='<option value="">Not specified</option>'+opts;if(data.cards.some(c=>c.id===txold))$('txAccount').value=txold;
+  const bold=$('bCard').value;$('bCard').innerHTML='<option value="">No</option>'+opts;if(data.cards.some(c=>c.id===bold))$('bCard').value=bold;
+}
+
+/* ---------- bills & income ---------- */
+const BILL_CATS=['Housing','Utilities','Phone & internet','Insurance','Subscriptions','Transport','Health','Childcare','Loans','Other'];
+function setBillKind(k){
+  $('billKind').value=k;document.querySelectorAll('#billKindSeg button').forEach(b=>b.classList.toggle('on',b.dataset.k===k));
+  document.querySelectorAll('#billForm .bill-only').forEach(e=>e.classList.toggle('hidden',k!=='bill'));
+  $('bName').placeholder=k==='bill'?'e.g. Trash pickup':'e.g. Paycheck';$('bAmountLab').textContent=k==='bill'?'Amount':'Take-home amount';
+  $('billCats').innerHTML=(k==='bill'?BILL_CATS:['Salary','Side income','Benefits','Child support','Other']).map(c=>`<option value="${esc(c)}"></option>`).join('');
+  syncFreq();
+}
+function syncFreq(){
+  const f=$('bFreq').value,inc=$('billKind').value==='income';
+  $('bDayWrap').classList.toggle('hidden',f!=='monthly');$('bDateWrap').classList.toggle('hidden',f==='monthly');
+  $('bDayLab').textContent=inc?'Paid on day of the month':'Due day of the month';
+  $('bDateLab').textContent=f==='once'?(inc?'Date':'Due date'):inc?'Next pay date':'Next due date';
+}
+function openBillForm(kind,id){
+  const list=kind==='income'?data.income:data.bills,b=id?list.find(x=>x.id===id):null;
+  $('billForm').reset();$('billId').value=b?b.id:'';$('billDelete').classList.toggle('hidden',!b);
+  $('bFreq').value=b?b.frequency:(kind==='income'?'biweekly':'monthly');
+  setBillKind(kind);$('billTitle').textContent=(b?'Edit ':'Add ')+(kind==='income'?'income':'a bill');
+  $('billKindSeg').classList.toggle('hidden',!!b);
+  if(b){$('bName').value=b.name;$('bAmount').value=b.amount;$('bDay').value=b.dueDay||(b.nextDue?+b.nextDue.slice(8):'');$('bDate').value=b.nextDue||'';$('bCat').value=b.category||'';$('bNotes').value=b.notes||'';if(kind==='bill'){$('bAuto').checked=b.autopay;$('bVar').checked=b.variable;$('bCard').value=b.card||''}}
+  showDlg('billDlg');setTimeout(()=>$('bName').focus(),60);
+}
+function deleteBill(kind,id){const key=kind==='income'?'income':'bills',b=data[key].find(x=>x.id===id);if(!b)return;closeDialogs();withUndo(b.name+' deleted.',()=>{data[key]=data[key].filter(x=>x.id!==id)})}
+function openPayBill(id){
+  const b=data.bills.find(x=>x.id===id);if(!b)return;
+  $('logForm').reset();$('logDate').value=dateNow();$('logCard').value=id;$('logKind').value='bill';
+  $('logTitle').textContent='Mark paid · '+b.name;
+  const st=billDue(b);$('logInfo').textContent=(st&&st.date?'Due '+fmtDate(st.date)+' · ':'')+(b.variable?'usually about ':'')+money(b.amount)+(b.lastPaid?' · last paid '+fmtDate(b.lastPaid):'');
+  $('logAmount').value=num(b.amount)?b.amount.toFixed(2):'';$('logTx').checked=true;
+  $('logTxLabel').textContent='Also add to Transactions as money out ('+(b.category||'Bills')+')';
+  showDlg('logDlg');setTimeout(()=>{$('logAmount').focus();$('logAmount').select()},60);
 }
 
 /* ---------- cards ---------- */
@@ -1243,11 +1631,11 @@ function openCardForm(id){
   const c=id?data.cards.find(x=>x.id===id):null;
   $('cardForm').reset();$('cardId').value=c?c.id:'';
   $('cardFormTitle').textContent=c?'Edit '+c.name:'Add a card';$('cardDelete').classList.toggle('hidden',!c);
-  if(c){$('cName').value=c.name;$('cBalance').value=c.balance;$('cStart').value=c.startBalance;$('cLimit').value=c.limit||'';$('cApr').value=c.apr;$('cMin').value=c.min||'';$('cPayment').value=c.payment;$('cTarget').value=c.target;$('cStep').value=c.step;$('cNotes').value=c.notes||''}
+  if(c){$('cName').value=c.name;$('cBalance').value=c.balance;$('cStart').value=c.startBalance;$('cLimit').value=c.limit||'';$('cApr').value=c.apr;$('cMin').value=c.min||'';$('cPayment').value=c.payment;$('cTarget').value=c.target;$('cStep').value=c.step;$('cNotes').value=c.notes||'';$('cDue').value=c.dueDay||'';$('cAutopay').checked=!!c.autopay}
   $('cardAdv').open=false;updateMinHint();showDlg('cardDlg');setTimeout(()=>$('cName').focus(),60);
 }
 const editCard=openCardForm;
-function deleteCard(id){const c=data.cards.find(c=>c.id===id);if(!c)return;closeDialogs();withUndo(c.name+' deleted.',()=>{data.cards=data.cards.filter(x=>x.id!==id);data.history=data.history.filter(h=>h.cardId!==id);data.transactions.forEach(t=>{if(t.account===id)t.account=''})})}
+function deleteCard(id){const c=data.cards.find(c=>c.id===id);if(!c)return;closeDialogs();withUndo(c.name+' deleted.',()=>{data.cards=data.cards.filter(x=>x.id!==id);data.history=data.history.filter(h=>h.cardId!==id);data.transactions.forEach(t=>{if(t.account===id)t.account=''});data.bills.forEach(b=>{if(b.card===id)b.card=''})})}
 function openLog(id,kind){
   const c=data.cards.find(c=>c.id===id);if(!c)return;
   $('logForm').reset();$('logDate').value=dateNow();$('logCard').value=id;$('logKind').value=kind;
@@ -1300,7 +1688,17 @@ function download(name,content,type){const blob=new Blob([content],{type}),url=U
 const stamp=()=>dateNow();
 function csvCell(v){if(typeof v==='number')return String(Math.round(v*100)/100);let s=String(v??'');if(/^[=+\-@\t\r]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'}
 const toCsv=rows=>rows.map(r=>r.map(csvCell).join(',')).join('\r\n');
-function exportJson(){download('fintrack-backup-'+stamp()+'.json',JSON.stringify(exportObj(),null,2),'application/json');markBackedUp();toast('Backup file downloaded.')}
+function exportJson(){if(!hasContent())return toast('Nothing to save yet.');download('fintrack.json',profileText(),'application/json');markBackedUp();toast('fintrack.json downloaded. Keep it somewhere private; replace the old one.')}
+async function copyForClaude(){
+  if(!hasContent())return toast('Nothing to copy yet. Add something first, or start in an AI chat.');
+  const text='Here is my FinTrack file. Follow the "_agent" rules inside it: answer my questions from it, and when I tell you something changed, give me back the complete updated file.\n\n```json\n'+profileText()+'```\n';
+  let ok=false;
+  try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);ok=true}}catch(e){}
+  if(!ok){const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{ok=document.execCommand('copy')}catch(e){}ta.remove()}
+  if(ok){markBackedUp();toast('Copied. Paste it into Claude, then tell it what changed.')}else{exportJson();toast('Couldn’t copy, so the file was downloaded instead. Attach it in your chat.')}
+}
+// Load any dropped/opened text through the same path as pasting into Load.
+async function loadTextNow(text){openLoad();$('loadText').value=text;$('loadText').dispatchEvent(new Event('input'));if(!codeIsLocked(text))await doLoad();else $('loadPass').focus()}
 
 /* ---------- dialogs ---------- */
 function showDlg(id){const d=$(id);if(typeof d.showModal==='function'){if(!d.open)d.showModal()}else d.setAttribute('open','')}
@@ -1313,7 +1711,7 @@ function regenCode(){
   if(p1&&!canCrypto){$('saveInfo').innerHTML='<span class="red">Encryption needs the https page (your GitHub Pages link). Leave the passphrase blank here.</span>';$('saveCode').value='';codeReady=Promise.resolve('');return}
   if(p1!==p2){$('saveInfo').innerHTML='<span class="amber">Passphrases don’t match yet.</span>';$('saveCode').value='';codeReady=Promise.resolve('');return}
   $('saveInfo').textContent=p1?'Encrypting…':'Creating code…';
-  codeReady=makeCode(p1).then(code=>{if(job!==codeJob)return codeReady;const note=codeNote(code,!!p1);$('saveCode').value=note;$('saveInfo').innerHTML=(p1?'🔒 Locked with your passphrase. ':'🔓 Unlocked: anyone who sees this code can read your data. ')+'Code length: '+code.length.toLocaleString()+' characters.';return note}).catch(()=>{$('saveInfo').innerHTML='<span class="red">Could not create a code in this browser. Use “Download backup (.json)” instead.</span>';return ''});
+  codeReady=makeCode(p1).then(code=>{if(job!==codeJob)return codeReady;const note=codeNote(code,!!p1);$('saveCode').value=note;$('saveInfo').innerHTML=(p1?'🔒 Locked with your passphrase. ':'🔓 Unlocked: anyone who sees this code can read your data. ')+'Code length: '+code.length.toLocaleString()+' characters.';return note}).catch(()=>{$('saveInfo').innerHTML='<span class="red">Could not create a code in this browser. Use “Download fintrack.json” instead.</span>';return ''});
 }
 function openSave(){if(!hasContent()){toast('Nothing to save yet. Add a card or transaction first.');return}showDlg('saveDlg');regenCode()}
 async function copyCode(){
@@ -1328,7 +1726,11 @@ async function downloadTxt(){const note=await codeReady;if(!note)return;download
 function openLoad(){$('loadText').value='';$('loadPass').value='';$('loadErr').textContent='';$('loadPassWrap').classList.add('hidden');showDlg('loadDlg');setTimeout(()=>$('loadText').focus(),50)}
 async function doLoad(){
   $('loadErr').textContent='';const text=$('loadText').value;
-  if(!findCode(text)){const o=findJson(text);if(isImportObj(o)){const imp=readImport(o);if(imp.cards.length||imp.transactions.length){openImport(imp);return}$('loadErr').textContent='That import has no cards or transactions in it.';return}}
+  if(!findCode(text)){
+    const o=findJson(text);
+    if(o&&o.fintrack==='profile'){try{openProfile(sanitize(o,true))}catch(e){$('loadErr').textContent=e.message}return}
+    if(isImportObj(o)){const imp=readImport(o);if(imp.cards.length||imp.transactions.length||imp.bills.length||imp.income.length){openImport(imp);return}$('loadErr').textContent='That import has nothing in it.';return}
+  }
   try{
     const d=await readSaveText(text,$('loadPass').value);
     if(hasContent()&&isDirty()&&!confirm('You have changes that aren’t saved. Loading will replace them. Continue?'))return;
@@ -1343,7 +1745,9 @@ $('moreDlg').addEventListener('click',e=>{const b=e.target.closest('[data-more]'
 document.addEventListener('click',e=>{
   const go=e.target.closest('[data-goto]');if(go){setPage(go.dataset.goto);return}
   const gc=e.target.closest('[data-goto-card]');if(gc){gotoCard(gc.dataset.gotoCard);return}
-  const h=e.target.closest('[data-act-hero]');if(h){if(h.dataset.actHero==='addcard')openCardForm();else openTxForm();return}
+  const h=e.target.closest('[data-act-hero]');if(h){const a=h.dataset.actHero;if(a==='addcard')openCardForm();else if(a==='addbill')openBillForm('bill');else if(a==='addincome')openBillForm('income');else openTxForm();return}
+  const er=e.target.closest('[data-edit-rec]');if(er){const [k,id]=er.dataset.editRec.split(':');openBillForm(k,id);return}
+  const pb=e.target.closest('[data-pay-bill]');if(pb){openPayBill(pb.dataset.payBill);return}
   // close any open ⋯ menu when clicking elsewhere
   document.querySelectorAll('details.menu[open]').forEach(d=>{if(!d.contains(e.target))d.open=false});
 });
@@ -1363,7 +1767,7 @@ $('cardForm').addEventListener('submit',e=>{
   e.preventDefault();
   const id=$('cardId').value||uid(),existing=data.cards.find(x=>x.id===id),bal=num($('cBalance').value),apr=clamp(num($('cApr').value),0,100);
   const startRaw=$('cStart').value.trim(),minRaw=$('cMin').value.trim(),tRaw=$('cTarget').value.trim(),sRaw=$('cStep').value.trim();
-  const c={id,name:$('cName').value.trim().slice(0,60)||'Card',balance:bal,startBalance:startRaw===''?(existing?existing.startBalance:bal):num(startRaw),limit:num($('cLimit').value),apr,min:minRaw===''?estMin(bal,apr):num(minRaw),payment:num($('cPayment').value),target:tRaw===''?(existing?existing.target:24):clamp(Math.floor(num(tRaw))||1,1,600),step:sRaw===''?(existing?existing.step:25):num(sRaw),notes:$('cNotes').value.trim().slice(0,300)};
+  const c={id,name:$('cName').value.trim().slice(0,60)||'Card',balance:bal,startBalance:startRaw===''?(existing?existing.startBalance:bal):num(startRaw),limit:num($('cLimit').value),apr,min:minRaw===''?estMin(bal,apr):num(minRaw),payment:num($('cPayment').value),target:tRaw===''?(existing?existing.target:24):clamp(Math.floor(num(tRaw))||1,1,600),step:sRaw===''?(existing?existing.step:25):num(sRaw),notes:$('cNotes').value.trim().slice(0,300),dueDay:dayNum($('cDue').value),autopay:$('cAutopay').checked,lastPaid:existing?existing.lastPaid||'':''};
   if(c.limit&&c.balance>c.limit&&!confirm('Balance is over the credit limit. Save anyway?'))return;
   const i=data.cards.findIndex(x=>x.id===id);if(i>=0)data.cards[i]=c;else data.cards.push(c);
   closeDialogs();commit(existing?'Card updated.':c.name+' added.');
@@ -1377,7 +1781,14 @@ $('cardsGrid').addEventListener('toggle',e=>{const d=e.target;if(d.matches&&d.ma
 $('cardsGrid').addEventListener('input',e=>{const inp=e.target.closest('[data-whatif]');if(!inp)return;const c=data.cards.find(x=>x.id===inp.dataset.whatif);const out=document.querySelector(`[data-whatif-out="${inp.dataset.whatif}"]`);if(c&&out)out.innerHTML=whatIfText(c,num(inp.value))});
 $('logForm').addEventListener('submit',e=>{
   e.preventDefault();
-  const c=data.cards.find(x=>x.id===$('logCard').value),kind=$('logKind').value;let amt=num($('logAmount').value);const date=validDate($('logDate').value)||dateNow(),note=$('logNote').value.trim().slice(0,120);
+  const kind=$('logKind').value;let amt=num($('logAmount').value);const date=validDate($('logDate').value)||dateNow(),note=$('logNote').value.trim().slice(0,120);
+  if(kind==='bill'){
+    const b=data.bills.find(x=>x.id===$('logCard').value);if(!b||!amt)return;
+    b.lastPaid=date;if(b.variable)b.amount=amt;
+    if($('logTx').checked)data.transactions.push({id:uid(),date,type:'expense',amount:amt,category:b.category||'Bills',description:b.name+(note?' · '+note:''),account:b.card||'',bill:b.id});
+    closeDialogs();const st=billDue(b);commit(b.name+' marked paid'+(st&&st.date?'. Next due '+fmtDate(st.date)+'.':'.'));return;
+  }
+  const c=data.cards.find(x=>x.id===$('logCard').value);
   if(!c||!amt)return;
   if(kind==='payment'){if(amt>c.balance){if(!c.balance)return toast('This card has no balance.');if(!confirm('That is more than the balance ('+money(c.balance)+'). Record '+money(c.balance)+' to pay it off?'))return;amt=c.balance}c.balance=Math.round((c.balance-amt)*100)/100}
   else c.balance=Math.round((c.balance+amt)*100)/100;
@@ -1408,6 +1819,42 @@ $('doLoad').onclick=doLoad;
 $('importMerge').onclick=()=>applyImport('merge');
 $('importReplace').onclick=()=>{if(confirm('Replace all your current cards and transactions with this import? (You can undo right after.)'))applyImport('replace')};
 $('aiPaste').onclick=openLoad;
+$('profileLoad').onclick=applyProfile;
+$('fileDownload').onclick=exportJson;$('fileCopy').onclick=copyForClaude;$('fileLoad').onclick=openLoad;
+$('addBill').onclick=()=>openBillForm('bill');$('addIncome').onclick=()=>openBillForm('income');
+$('bFreq').innerHTML=FREQS.map(f=>`<option value="${f}">${FREQ_LABEL[f]}</option>`).join('');
+$('bFreq').addEventListener('change',syncFreq);
+$('billKindSeg').addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(b){setBillKind(b.dataset.k);if(b.dataset.k==='income'&&$('bFreq').value==='monthly'&&!$('bDay').value)$('bFreq').value='biweekly';syncFreq()}});
+$('billDelete').onclick=()=>deleteBill($('billKind').value,$('billId').value);
+$('billForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const kind=$('billKind').value==='income'?'income':'bill',key=kind==='income'?'income':'bills',id=$('billId').value,f=$('bFreq').value;
+  const ex=id?data[key].find(x=>x.id===id):null;
+  let dueDay=0,nextDue='';
+  if(f==='monthly'){dueDay=dayNum($('bDay').value);if(!dueDay)return toast('Enter the day of the month it’s due (1–31).')}
+  else{nextDue=validDate($('bDate').value)||'';if(!nextDue)return toast('Pick the next date it’s due.')}
+  const name=$('bName').value.trim().slice(0,60)||(kind==='income'?'Income':'Bill');
+  // Readable ids ("trash-pickup") make the file easier for people and assistants to work with.
+  const used=new Set([...data.cards,...data.bills,...data.income].map(x=>x.id));let nid=name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,30)||kind,k=nid,i=2;while(used.has(k))k=nid+'-'+i++;
+  const r={id:ex?ex.id:k,name,amount:num($('bAmount').value),category:$('bCat').value.trim().slice(0,40)||(kind==='income'?'Income':'Bills'),frequency:f,dueDay,nextDue,notes:$('bNotes').value.trim().slice(0,300)};
+  if(kind==='bill')Object.assign(r,{autopay:$('bAuto').checked,variable:$('bVar').checked,card:$('bCard').value,lastPaid:ex?ex.lastPaid||'':''});
+  if(ex)Object.assign(ex,r);else data[key].push(r);
+  closeDialogs();commit(ex?name+' updated.':name+' added.');
+});
+// Drop a fintrack.json (or save .txt) anywhere on the page to load it.
+let dragDepth=0;
+const hasFiles=e=>e.dataTransfer&&[...e.dataTransfer.types].includes('Files');
+document.addEventListener('dragenter',e=>{if(!hasFiles(e))return;e.preventDefault();dragDepth++;document.body.classList.add('droptarget')});
+document.addEventListener('dragover',e=>{if(hasFiles(e))e.preventDefault()});
+document.addEventListener('dragleave',e=>{if(!hasFiles(e))return;if(--dragDepth<=0){dragDepth=0;document.body.classList.remove('droptarget')}});
+document.addEventListener('drop',async e=>{
+  if(!hasFiles(e))return;e.preventDefault();dragDepth=0;document.body.classList.remove('droptarget');
+  const f=e.dataTransfer.files[0];if(!f)return;
+  if(f.size>20e6)return toast('That file is too large to be a FinTrack file.');
+  await loadTextNow(await f.text());
+});
+// Coming back to the tab after saving Claude's changes over the linked auto-save file picks them up.
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&fileHandle)syncFromFile()});
 $('wAi').onclick=()=>{setPage('settings');const p=$('aiPanel');p.scrollIntoView({block:'start'});p.classList.add('flash');setTimeout(()=>p.classList.remove('flash'),1500)};
 $('aiCopy').onclick=async()=>{
   const t=$('aiPrompt').textContent;let ok=false;
@@ -1416,12 +1863,12 @@ $('aiCopy').onclick=async()=>{
   toast(ok?'Copied. Paste it into your AI assistant, or just say it in voice chat.':'Select the sentence and copy it.');
 };
 // Point the prompt at wherever this copy of FinTrack is hosted (forks included).
-if(location.protocol!=='file:'){try{$('aiPrompt').textContent='Read '+new URL('llms.txt',location.href.split('#')[0]).href+' and help me put my finances into FinTrack.'}catch(e){}}
+if(location.protocol!=='file:'){try{$('aiPrompt').textContent='Read '+new URL('llms.txt',location.href.split('#')[0]).href+' and help me make my FinTrack file.'}catch(e){}}
 window.addEventListener('hashchange',importFromHash);
 $('loadText').addEventListener('input',()=>{$('loadErr').textContent='';$('loadPassWrap').classList.toggle('hidden',!codeIsLocked($('loadText').value))});
 $('loadPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLoad()});
 $('loadFileBtn').onclick=()=>$('loadFile').click();
-$('loadFile').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;if(f.size>20e6)return $('loadErr').textContent='That file is too large to be a FinTrack save.';$('loadText').value=await f.text();$('loadText').dispatchEvent(new Event('input'));if(!codeIsLocked($('loadText').value))doLoad();else $('loadPass').focus()});
+$('loadFile').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;if(f.size>20e6)return $('loadErr').textContent='That file is too large to be a FinTrack save.';await loadTextNow(await f.text())});
 $('fsPanel').addEventListener('click',e=>{const b=e.target.closest('[data-fs]');if(!b)return;({link:linkNewFile,open:openLinkedFile,reconnect:reconnectFile,unlink:unlinkFile,write:writeFile})[b.dataset.fs]()});
 $('currency').innerHTML=CURRENCIES.map(c=>`<option value="${c}">${c}</option>`).join('');
 $('currency').addEventListener('change',()=>{data.settings.currency=$('currency').value;commit()});

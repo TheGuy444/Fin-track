@@ -1,0 +1,55 @@
+{
+  "fintrack": "profile",
+  "version": 3,
+  "$schema": "https://theguy444.github.io/Fin-track/fintrack.schema.json",
+  "_readme": "This is a FinTrack file: your own finances, kept by you. There is no account and no server. Open https://theguy444.github.io/Fin-track/ and Load (or drop) this file to see your dashboard. To have an AI assistant update it, give it this whole file and say what changed; the rules it follows are in _agent.",
+  "_agent": {
+    "what": "FinTrack file: the owner's personal finances. They keep this file; there is no account or server. They load it at https://theguy444.github.io/Fin-track/ to see their dashboard.",
+    "spec": "https://theguy444.github.io/Fin-track/llms.txt",
+    "rules": [
+      "You are helping the owner keep this file up to date. Answer questions from it, and when they tell you something changed, edit it.",
+      "After any edit, reply with a one-line summary and the COMPLETE updated file in a single ```json code block. Never send only a fragment unless they ask for an import.",
+      "Change only what they asked. Keep every other entry, id and field exactly as it was, including fields you don't recognise.",
+      "On every edit: revision + 1; updatedAt = current date-time (ISO 8601); updatedBy = \"assistant\"; append {\"rev\", \"at\", \"by\": \"assistant\", \"summary\"} to log.",
+      "Numbers are plain numbers (3400, not \"$3,400\"). apr is a percent (24.99). Dates are YYYY-MM-DD.",
+      "New items get a short unique id made from the name (\"trash\", \"chase-visa\"). Link to cards by id.",
+      "bills and income repeat by frequency: weekly, biweekly, monthly, quarterly, yearly or once. monthly needs dueDay (1-31). The others need nextDue: any real due date; it repeats from there.",
+      "\"I paid <bill>\": set that bill's lastPaid to the date and add an expense transaction (bill = its id) unless they say not to. \"I paid <card> $X\": subtract X from its balance and add a history entry {kind: \"payment\"}; no transaction unless asked.",
+      "Ask one short question when something important is missing (a card's APR, a bill's due day). If they don't know, leave the field out; never guess.",
+      "Never store card or account numbers, CVV, PINs, passwords, SSNs or logins, even if the owner types them. Use nicknames like \"Chase Visa\".",
+      "If they share a file with a lower revision than one you produced earlier in this chat, ask which one is current before editing.",
+      "Due dates, totals and payoff dates you give are estimates; tell them to check against their statements."
+    ]
+  },
+  "revision": 4,
+  "updatedAt": "2026-11-25T18:30:00Z",
+  "updatedBy": "assistant",
+  "settings": { "currency": "USD", "strategy": "avalanche" },
+  "cards": [
+    { "id": "chase-visa", "name": "Chase Visa", "balance": 3400, "apr": 24.99, "payment": 200, "min": 95, "limit": 8000, "dueDay": 18, "startBalance": 4100, "notes": "0% promo on balance transfers ends June 2027" },
+    { "id": "discover", "name": "Discover", "balance": 1100, "apr": 26, "payment": 100, "min": 35, "dueDay": 3, "autopay": true }
+  ],
+  "bills": [
+    { "id": "rent", "name": "Rent", "amount": 1400, "category": "Housing", "frequency": "monthly", "dueDay": 1, "lastPaid": "2026-11-01" },
+    { "id": "trash", "name": "Trash pickup", "amount": 35, "category": "Utilities", "frequency": "monthly", "dueDay": 15 },
+    { "id": "electric", "name": "Electric", "amount": 120, "category": "Utilities", "frequency": "monthly", "dueDay": 22, "variable": true, "lastPaid": "2026-10-21" },
+    { "id": "phone", "name": "Phone", "amount": 65, "category": "Phone & internet", "frequency": "monthly", "dueDay": 9, "autopay": true, "card": "chase-visa" },
+    { "id": "car-insurance", "name": "Car insurance", "amount": 390, "category": "Insurance", "frequency": "quarterly", "nextDue": "2026-12-10" }
+  ],
+  "income": [
+    { "id": "paycheck", "name": "Paycheck", "amount": 2100, "category": "Salary", "frequency": "biweekly", "nextDue": "2026-11-27" }
+  ],
+  "history": [
+    { "id": "h1", "card": "chase-visa", "date": "2026-10-17", "kind": "payment", "amount": 200 },
+    { "id": "h2", "card": "chase-visa", "date": "2026-11-16", "kind": "payment", "amount": 200 }
+  ],
+  "transactions": [
+    { "id": "t1", "date": "2026-11-01", "type": "expense", "amount": 1400, "category": "Housing", "description": "Rent", "bill": "rent" },
+    { "id": "t2", "date": "2026-11-13", "type": "income", "amount": 2100, "category": "Salary", "description": "Paycheck" },
+    { "id": "t3", "date": "2026-11-08", "type": "expense", "amount": 62.4, "category": "Groceries", "description": "Costco", "card": "chase-visa" }
+  ],
+  "log": [
+    { "rev": 3, "at": "2026-11-25T18:20:00Z", "by": "assistant", "summary": "Added Trash pickup: $35 a month, due the 15th" },
+    { "rev": 4, "at": "2026-11-25T18:30:00Z", "by": "assistant", "summary": "Marked rent paid on Nov 1" }
+  ]
+}
